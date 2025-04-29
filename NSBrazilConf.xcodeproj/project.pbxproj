@@ -91,6 +91,7 @@
 		1D0A95302342E87700B2C582 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1D0A95332342E87700B2C582 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1D0A95382342E87700B2C582 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2211E38D2DC1004700D347E8 /* CocoaHeadsBR-Watch-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "CocoaHeadsBR-Watch-Info.plist"; sourceTree = "<group>"; };
 		226DD9BF2DC0579B0026B3CA /* CocoaHeadsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CocoaHeadsKit; sourceTree = "<group>"; };
 		6BC95AE02C4C381400BFBF71 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		6BC95AE22C4C443600BFBF71 /* CustomCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCardView.swift; sourceTree = "<group>"; };
@@ -165,6 +166,7 @@
 		1D0A951E2342E87500B2C582 = {
 			isa = PBXGroup;
 			children = (
+				2211E38D2DC1004700D347E8 /* CocoaHeadsBR-Watch-Info.plist */,
 				B4BAA62D2C61542C0024B351 /* NSBrazilConf.xctestplan */,
 				226DD9BF2DC0579B0026B3CA /* CocoaHeadsKit */,
 				B4C5F8C32C5ADD1C0031246C /* Common */,
@@ -819,6 +821,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "CocoaHeadsBR-Watch-Info.plist";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.cocoaheadsbr.conf;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
@@ -856,6 +859,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "CocoaHeadsBR-Watch-Info.plist";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.cocoaheadsbr.conf;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;

@@ -6,6 +6,14 @@
 	<array>
 		<string>appclips:nsbrazil.com</string>
 	</array>
+	<key>com.apple.developer.icloud-container-identifiers</key>
+	<array>
+		<string>iCloud.br.com.cocoaHeads.conf</string>
+	</array>
+	<key>com.apple.developer.icloud-services</key>
+	<array>
+		<string>CloudKit-Anonymous</string>
+	</array>
 	<key>com.apple.developer.parent-application-identifiers</key>
 	<array>
 		<string>$(AppIdentifierPrefix)com.cocoaheadsbr.conf</string>
