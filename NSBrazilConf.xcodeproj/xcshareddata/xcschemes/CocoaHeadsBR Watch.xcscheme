@@ -30,7 +30,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1D0A95262342E87500B2C582"
-               BuildableName = "NSBrazil.app"
+               BuildableName = "CocoaHeadsBR.app"
                BlueprintName = "NSBrazilConf"
                ReferencedContainer = "container:NSBrazilConf.xcodeproj">
             </BuildableReference>
