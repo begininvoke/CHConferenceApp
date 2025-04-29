@@ -9,7 +9,10 @@
 /* Begin PBXBuildFile section */
 		1D0A95312342E87700B2C582 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D0A95302342E87700B2C582 /* Assets.xcassets */; };
 		1D0A95342342E87700B2C582 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D0A95332342E87700B2C582 /* Preview Assets.xcassets */; };
-		1D0A95372342E87700B2C582 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D0A95352342E87700B2C582 /* LaunchScreen.storyboard */; };
+		2211E38A2DC059EC00D347E8 /* CocoaHeadsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2211E3892DC059EC00D347E8 /* CocoaHeadsKit */; };
+		2211E38C2DC05BAD00D347E8 /* CocoaHeadsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2211E38B2DC05BAD00D347E8 /* CocoaHeadsKit */; };
+		226DD9C02DC0579B0026B3CA /* CocoaHeadsKit in Resources */ = {isa = PBXBuildFile; fileRef = 226DD9BF2DC0579B0026B3CA /* CocoaHeadsKit */; };
+		226DD9C12DC0579B0026B3CA /* CocoaHeadsKit in Resources */ = {isa = PBXBuildFile; fileRef = 226DD9BF2DC0579B0026B3CA /* CocoaHeadsKit */; };
 		6BC95AE12C4C381400BFBF71 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC95AE02C4C381400BFBF71 /* RatingView.swift */; };
 		6BC95AE32C4C443600BFBF71 /* CustomCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC95AE22C4C443600BFBF71 /* CustomCardView.swift */; };
 		6BC95AE52C4C446100BFBF71 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC95AE42C4C446100BFBF71 /* CustomButton.swift */; };
@@ -84,11 +87,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1D0A95272342E87500B2C582 /* NSBrazil.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NSBrazil.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D0A95272342E87500B2C582 /* CocoaHeadsBR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoaHeadsBR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D0A95302342E87700B2C582 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1D0A95332342E87700B2C582 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		1D0A95362342E87700B2C582 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1D0A95382342E87700B2C582 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		226DD9BF2DC0579B0026B3CA /* CocoaHeadsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CocoaHeadsKit; sourceTree = "<group>"; };
 		6BC95AE02C4C381400BFBF71 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		6BC95AE22C4C443600BFBF71 /* CustomCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCardView.swift; sourceTree = "<group>"; };
 		6BC95AE42C4C446100BFBF71 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
@@ -126,6 +129,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B409F3B62C5AE0EB00ECF000 /* NSBrazilLib in Frameworks */,
+				2211E38C2DC05BAD00D347E8 /* CocoaHeadsKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B409F3BA2C5AE3FE00ECF000 /* NSBrazilLib in Frameworks */,
+				2211E38A2DC059EC00D347E8 /* CocoaHeadsKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				B4BAA62D2C61542C0024B351 /* NSBrazilConf.xctestplan */,
+				226DD9BF2DC0579B0026B3CA /* CocoaHeadsKit */,
 				B4C5F8C32C5ADD1C0031246C /* Common */,
 				B441A4F62C5ADABD009E7771 /* NSBrazilLib */,
 				1D0A95292342E87500B2C582 /* NSBrazilConf */,
@@ -176,7 +182,7 @@
 		1D0A95282342E87500B2C582 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D0A95272342E87500B2C582 /* NSBrazil.app */,
+				1D0A95272342E87500B2C582 /* CocoaHeadsBR.app */,
 				B44067B225B1E25700D9DE9B /* NSClip.app */,
 				B482AA872C5C721600F66F3B /* CocoaHeadsBR.app */,
 				B4A60BD82C5C9C1900D2597B /* CocoaHeadsBR Vision.app */,
@@ -191,7 +197,6 @@
 				6BCB43432C4C23230076A6E9 /* Modules */,
 				B48E24C82367A24100193834 /* NSBrazilConf.entitlements */,
 				1D0A95302342E87700B2C582 /* Assets.xcassets */,
-				1D0A95352342E87700B2C582 /* LaunchScreen.storyboard */,
 				1D0A95382342E87700B2C582 /* Info.plist */,
 				1D0A95322342E87700B2C582 /* Preview Content */,
 				6BCB43412C4C20350076A6E9 /* NSBrazilConfApp.swift */,
@@ -325,9 +330,10 @@
 			name = NSBrazilConf;
 			packageProductDependencies = (
 				B409F3B52C5AE0EB00ECF000 /* NSBrazilLib */,
+				2211E38B2DC05BAD00D347E8 /* CocoaHeadsKit */,
 			);
 			productName = NSBrazilConf;
-			productReference = 1D0A95272342E87500B2C582 /* NSBrazil.app */;
+			productReference = 1D0A95272342E87500B2C582 /* CocoaHeadsBR.app */;
 			productType = "com.apple.product-type.application";
 		};
 		B44067B125B1E25700D9DE9B /* NSClip */ = {
@@ -345,6 +351,7 @@
 			name = NSClip;
 			packageProductDependencies = (
 				B409F3B92C5AE3FE00ECF000 /* NSBrazilLib */,
+				2211E3892DC059EC00D347E8 /* CocoaHeadsKit */,
 			);
 			productName = NSClip;
 			productReference = B44067B225B1E25700D9DE9B /* NSClip.app */;
@@ -444,9 +451,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D0A95372342E87700B2C582 /* LaunchScreen.storyboard in Resources */,
 				1D0A95342342E87700B2C582 /* Preview Assets.xcassets in Resources */,
 				1D0A95312342E87700B2C582 /* Assets.xcassets in Resources */,
+				226DD9C12DC0579B0026B3CA /* CocoaHeadsKit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +464,7 @@
 				B44067BC25B1E25800D9DE9B /* Preview Assets.xcassets in Resources */,
 				B4DD00122C6F0536003ADBD9 /* Assets.xcassets in Resources */,
 				B44067CB25B1E26900D9DE9B /* Assets.xcassets in Resources */,
+				226DD9C02DC0579B0026B3CA /* CocoaHeadsKit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,17 +559,6 @@
 			targetProxy = B482AA922C5C721700F66F3B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		1D0A95352342E87700B2C582 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1D0A95362342E87700B2C582 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1D0A95392342E87700B2C582 /* Debug */ = {
@@ -693,18 +690,19 @@
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = NSBrazilConf/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CocoaHeadsBR;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2024.1;
+				MARKETING_VERSION = 2025.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoaheadsbr.conf;
-				PRODUCT_NAME = NSBrazil;
+				PRODUCT_NAME = CocoaHeadsBR;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
@@ -723,18 +721,19 @@
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = NSBrazilConf/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CocoaHeadsBR;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2024.1;
+				MARKETING_VERSION = 2025.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoaheadsbr.conf;
-				PRODUCT_NAME = NSBrazil;
+				PRODUCT_NAME = CocoaHeadsBR;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
@@ -755,19 +754,19 @@
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = NSClip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CocoaHeadsBR;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2024.1;
+				MARKETING_VERSION = 2025.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoaheadsbr.conf.baseClip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -787,19 +786,19 @@
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = NSClip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CocoaHeadsBR;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2024.1;
+				MARKETING_VERSION = 2025.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoaheadsbr.conf.baseClip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -999,6 +998,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2211E3892DC059EC00D347E8 /* CocoaHeadsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CocoaHeadsKit;
+		};
+		2211E38B2DC05BAD00D347E8 /* CocoaHeadsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CocoaHeadsKit;
+		};
 		B409F3B52C5AE0EB00ECF000 /* NSBrazilLib */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NSBrazilLib;
