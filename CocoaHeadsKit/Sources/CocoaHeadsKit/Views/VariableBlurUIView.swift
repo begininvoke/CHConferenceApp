@@ -73,8 +73,7 @@ public class VariableBlurUIView: UIVisualEffectView {
     let filterClassStringEncoded = "Q0FGaWx0ZXI="
 
     let filterClassString: String = {
-      if
-        let data = Data(base64Encoded: filterClassStringEncoded),
+      if let data = Data(base64Encoded: filterClassStringEncoded),
         let string = String(data: data, encoding: .utf8)
       {
         return string
@@ -91,8 +90,7 @@ public class VariableBlurUIView: UIVisualEffectView {
 
     /// Decode the base64.
     let filterWithTypeString: String = {
-      if
-        let data = Data(base64Encoded: filterWithTypeStringEncoded),
+      if let data = Data(base64Encoded: filterWithTypeStringEncoded),
         let string = String(data: data, encoding: .utf8)
       {
         return string
@@ -106,7 +104,9 @@ public class VariableBlurUIView: UIVisualEffectView {
     let filterWithTypeSelector = Selector(filterWithTypeString)
 
     /// Create the class object.
-    guard let filterClass = NSClassFromString(filterClassString) as AnyObject as? NSObjectProtocol else {
+    guard
+      let filterClass = NSClassFromString(filterClassString) as AnyObject as? NSObjectProtocol
+    else {
       print("[VariableBlurView] couldn't create CAFilter class.")
       return
     }
@@ -118,7 +118,8 @@ public class VariableBlurUIView: UIVisualEffectView {
     }
 
     /// Create the blur effect.
-    let variableBlur = filterClass
+    let variableBlur =
+      filterClass
       .perform(filterWithTypeSelector, with: filterType)
       .takeUnretainedValue()
 
@@ -362,8 +363,8 @@ public enum VariableBlurViewConstants {
     """
 }
 
-public extension UIColor {
-  func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+extension UIColor {
+  public func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
     return UIGraphicsImageRenderer(size: size).image { rendererContext in
       self.setFill()
       rendererContext.fill(CGRect(origin: .zero, size: size))
