@@ -11,9 +11,9 @@ struct NavigationTitle: View {
   init(_ title: String) {
     self.title = title + " "
   }
-  
+
   let title: String
-  
+
   var body: some View {
     Text(title)
       .font(
@@ -32,5 +32,3 @@ extension View {
     self
   }
 }
-
-

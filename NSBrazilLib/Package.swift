@@ -3,10 +3,6 @@
 
 import PackageDescription
 
-let puddles = Target.Dependency.product(
-  name: "Puddles",
-  package: "Puddles")
-
 let package = Package(
   name: "NSBrazilLib",
   platforms: [
@@ -14,7 +10,7 @@ let package = Package(
     .tvOS(.v17),
     .macOS(.v14),
     .visionOS(.v1),
-    .watchOS(.v10),
+    .watchOS(.v10)
   ],
   products: [
     // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -26,7 +22,7 @@ let package = Package(
     .package(
       url: "https://github.com/SwiftedMind/Puddles",
       from: Version(2, 0, 0)),
-    .package(path: "Common"),
+    .package(path: "Common")
   ],
   targets: [
     // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -34,14 +30,13 @@ let package = Package(
     .target(
       name: "NSBrazilLib",
       dependencies: [
-        "Common",
-        puddles,
+        "Common"
       ],
       resources: [
         .process("2019.json")
       ]),
     .testTarget(
       name: "NSBrazilLibTests",
-      dependencies: ["NSBrazilLib"]),
+      dependencies: ["NSBrazilLib"])
   ]
 )

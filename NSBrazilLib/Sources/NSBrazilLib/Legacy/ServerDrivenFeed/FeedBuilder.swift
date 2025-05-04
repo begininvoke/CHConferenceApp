@@ -22,7 +22,7 @@ public struct FeedBuilder {
     .videos: VideoFeedItem.self,
     .sponsors: SponsorFeedItem.self,
     .talk: TalkFeedItem.self,
-    .filterFeed: FilterFeedItem.self,
+    .filterFeed: FilterFeedItem.self
   ]
 
   @ViewBuilder

@@ -53,5 +53,5 @@ struct Barcode: View {
 }
 
 #Preview {
-    Barcode(text: "Olá CocoaHeads")
+  Barcode(text: "Olá CocoaHeads")
 }

@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// TODO: Dark appearance support
 struct Ticket: View {
   var body: some View {
     TicketCard {

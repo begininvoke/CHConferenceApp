@@ -83,8 +83,10 @@ struct EventDetail: View {
         }
         .buttonStyle(CallToAction())
 
-        Text("A entrada será permitida somente após o preenchimento dos dados" +
-             "necessários para cadastro no evento dentro do app Meetup.")
+        Text(
+          "A entrada será permitida somente após o preenchimento dos dados"
+            + "necessários para cadastro no evento dentro do app Meetup."
+        )
         .font(.footnote)
         .fontWeight(.thin)
         .italic()
@@ -121,7 +123,9 @@ struct EventDetail: View {
       Card(title: "Agenda") {
         TitleSubtitleSystemImageView(
           title: "Talks & Palestrantes",
-          subtitle: "**Aleph Retamal**: HTTP e URLSession 101\n\n**Ruan Reis**: Swift Concurrency: Desafios na adaptação e implementação de código assíncrono",
+          subtitle:
+            "**Aleph Retamal**: HTTP e URLSession 101\n\n"
+            + "**Ruan Reis**: Swift Concurrency: Desafios na adaptação e implementação de código assíncrono",
           systemName: "person.bubble"
         )
       }

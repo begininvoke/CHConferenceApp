@@ -4,25 +4,25 @@
 import PackageDescription
 
 let package = Package(
-    name: "CocoaHeadsKit",
-    platforms: [
-        .iOS(.v18),
-        .visionOS(.v2)
-    ],
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "CocoaHeadsKit",
-            targets: ["CocoaHeadsKit"]),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "CocoaHeadsKit"),
-        .testTarget(
-            name: "CocoaHeadsKitTests",
-            dependencies: ["CocoaHeadsKit"]
-        ),
-    ]
+  name: "CocoaHeadsKit",
+  platforms: [
+    .iOS(.v18),
+    .visionOS(.v2)
+  ],
+  products: [
+    // Products define the executables and libraries a package produces, making them visible to other packages.
+    .library(
+      name: "CocoaHeadsKit",
+      targets: ["CocoaHeadsKit"])
+  ],
+  targets: [
+    // Targets are the basic building blocks of a package, defining a module or a test suite.
+    // Targets can depend on other targets in this package and products from dependencies.
+    .target(
+      name: "CocoaHeadsKit"),
+    .testTarget(
+      name: "CocoaHeadsKitTests",
+      dependencies: ["CocoaHeadsKit"]
+    )
+  ]
 )

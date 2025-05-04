@@ -15,7 +15,7 @@ struct FeedModel: Codable, Identifiable {
   private let formatter: ISO8601DateFormatter = {
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = [
-      .withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime, .withTimeZone,
+      .withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime, .withTimeZone
     ]
     return formatter
   }()

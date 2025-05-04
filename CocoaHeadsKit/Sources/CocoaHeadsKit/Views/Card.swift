@@ -48,8 +48,8 @@ struct Card<Content: View>: View {
   .padding()
   .frame(maxHeight: .infinity)
   .background {
-      Rectangle()
-          .fill(.secondary)
-          .ignoresSafeArea()
+    Rectangle()
+      .fill(.secondary)
+      .ignoresSafeArea()
   }
 }

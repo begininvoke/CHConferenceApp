@@ -5,7 +5,7 @@ import SwiftUI
 struct NSBrazilConfApp: App {
   var body: some Scene {
     WindowGroup {
-        Home()
+      Home()
     }
   }
 }

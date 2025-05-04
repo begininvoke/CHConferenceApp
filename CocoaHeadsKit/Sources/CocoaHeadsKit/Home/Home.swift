@@ -12,12 +12,11 @@ public struct Home: View {
 
   public var body: some View {
     NavigationStack {
-      VStack {
+      ScrollView {
         EventList()
-        Spacer()
         ChapterSelectionView()
+          .padding(.bottom)
       }
-      .padding(.bottom)
     }
   }
 }
