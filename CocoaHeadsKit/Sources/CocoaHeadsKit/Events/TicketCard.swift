@@ -14,11 +14,11 @@ struct TicketCard<Content: View>: View {
     VStack(alignment: .leading) {
       content()
     }
-    .background {
+    .background(alignment: .top) {
       Circle()
         .fill(.quaternary)
         .frame(width: 90)
-        .offset(y: -310)
+        .offset(y: -60)
     }
     .clipped()
     .background {
