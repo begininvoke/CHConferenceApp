@@ -13,22 +13,20 @@ struct EventList: View {
   @State private var isPresented = false
 
   var body: some View {
-    Button {
-      isPresented.toggle()
-    } label: {
-      Ticket()
+    VStack(alignment: .leading) {
+      NavigationTitle("Eventos")
+
+      Button {
+        isPresented.toggle()
+      } label: {
+        Ticket()
+      }
+      .buttonStyle(.plain)
     }
-    .buttonStyle(.plain)
     .padding()
     .fullScreenCover(isPresented: $isPresented) {
       NavigationStack {
         EventDetail()
-      }
-    }
-    .toolbar {
-      ToolbarItem(placement: .principal) {
-        NavigationTitle("Eventos")
-          .frame(maxWidth: .infinity, alignment: .leading)
       }
     }
   }
