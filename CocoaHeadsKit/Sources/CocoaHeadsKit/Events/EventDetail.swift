@@ -10,35 +10,20 @@ import SwiftUI
 struct EventDetail: View {
 
   @State private var scrollPosition: CGPoint = .zero
+  @State private var headerSize: CGFloat = .zero
 
   @Environment(\.dismiss) var dismiss
 
   var body: some View {
-    ZStack {
-      VStack {
-        Image(.meetup)
-          .resizable()
-          .aspectRatio(contentMode: .fill)
-          .frame(maxWidth: .infinity, maxHeight: 250)
-          .clipped()
-
-        Text("65º CocoaHeads @ Apple Developer Academy Mackenzie")
-          .font(.title)
-          .multilineTextAlignment(.center)
-
-        Spacer()
+    ZStack(alignment: .top) {
+      GeometryReader { proxy in
+        EventDetailHeader(scrollPosition: $scrollPosition)
+          .padding(.vertical)
+          .border(.pink)
+          .onAppear {
+            headerSize = proxy.size.height
+          }
       }
-      .blur(radius: min(-(scrollPosition.y / 35), 15))
-      .rotationEffect(
-        .degrees(
-          -max(
-            min(Double(-scrollPosition.y) / 50, 2),
-            0
-          )
-        )
-      )
-      .offset(y: max(scrollPosition.y / 2, -100))
-      .frame(alignment: .top)
 
       ScrollView {
         PositionObservingView(
@@ -46,7 +31,8 @@ struct EventDetail: View {
           position: $scrollPosition
         ) {
           Color.clear
-            .frame(height: 300)
+//            .frame(height: 330)
+            .frame(height: headerSize)
         }
 
         innerView
@@ -73,9 +59,9 @@ struct EventDetail: View {
         dismiss()
       } label: {
         Image(systemName: "chevron.down")
+          .toolbarStyle(scrollPosition: scrollPosition.y)
       }
       .buttonStyle(.plain)
-      .toolbarStyle(scrollPosition: scrollPosition.y)
     }
 
     ToolbarItem(placement: .topBarTrailing) {
@@ -84,44 +70,56 @@ struct EventDetail: View {
       } label: {
         Image(systemName: "square.and.arrow.up")
           .offset(y: -2)
+          .toolbarStyle(scrollPosition: scrollPosition.y)
       }
       .buttonStyle(.plain)
-      .toolbarStyle(scrollPosition: scrollPosition.y)
     }
   }
 
   @ViewBuilder
   var innerView: some View {
     VStack(alignment: .leading, spacing: 16) {
-      Button {
-        // noop
-      } label: {
-        Text("Confirmar presença! \(Image(systemName: "figure.walk"))")
+      Card {
+        Button {
+          // noop
+        } label: {
+          Text("Confirmar presença! \(Image(systemName: "figure.walk"))")
+        }
+        .buttonStyle(CallToAction())
+
+        Text("A entrada será permitida somente após o preenchimento dos dados" +
+             "necessários para cadastro no evento dentro do app Meetup.")
+        .font(.footnote)
+        .fontWeight(.thin)
+        .italic()
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity, alignment: .center)
       }
-      .buttonStyle(CallToAction())
 
       Card(title: "Informações") {
-        TitleSubtitleSystemImageView(
-          title: "Data",
-          subtitle: "Quinta-feira, 24 de abril de 2025",
-          systemName: "calendar"
-        )
+        VStack {
+          TitleSubtitleSystemImageView(
+            title: "Data",
+            subtitle: "Quinta-feira, 24 de abril de 2025",
+            systemName: "calendar"
+          )
 
-        Divider()
+          Divider()
 
-        TitleSubtitleSystemImageView(
-          title: "Duração",
-          subtitle: "19:00 - 22:00 BRT",
-          systemName: "clock"
-        )
+          TitleSubtitleSystemImageView(
+            title: "Duração",
+            subtitle: "19:00 - 22:00 BRT",
+            systemName: "clock"
+          )
 
-        Divider()
+          Divider()
 
-        TitleSubtitleSystemImageView(
-          title: "Endereço",
-          subtitle: "Av. Paulista, 1100 - São Paulo, SP",
-          systemName: "mappin"
-        )
+          TitleSubtitleSystemImageView(
+            title: "Endereço",
+            subtitle: "Av. Paulista, 1100 - São Paulo, SP",
+            systemName: "mappin"
+          )
+        }
       }
 
       Card(title: "Agenda") {
@@ -133,32 +131,35 @@ struct EventDetail: View {
       }
 
       Card(title: "Como chegar") {
-        TitleSubtitleSystemImageView(
-          title: "Carro",
-          subtitle: "O condomínio da OLX tem estacionamento para os convidados!",
-          systemName: "car"
-        )
+        VStack {
+          TitleSubtitleSystemImageView(
+            title: "Carro",
+            subtitle: "O condomínio da OLX tem estacionamento para os convidados!",
+            systemName: "car"
+          )
 
-        Divider()
+          Divider()
+            .padding(.vertical, 5)
 
-        TitleView(title: "Público", systemName: "bus") {
-          HStack {
-            Text("Brigadeiro")
-              .font(.callout)
-            Text("L2")
-              .font(.caption)
-              .foregroundStyle(.white)
-              .padding(3)
-              .background {
-                Circle()
-                  .fill(Color(.buttonBottomGradient))
-              }
-          }
-          .padding(5)
-          .padding(.horizontal, 3)
-          .background {
-            RoundedRectangle(cornerRadius: 50)
-              .fill(.quinary)
+          TitleView(title: "Público", systemName: "bus") {
+            HStack {
+              Text("Brigadeiro")
+                .font(.callout)
+              Text("L2")
+                .font(.caption)
+                .foregroundStyle(.white)
+                .padding(3)
+                .background {
+                  Circle()
+                    .fill(Color(.buttonBottomGradient))
+                }
+            }
+            .padding(5)
+            .padding(.horizontal, 3)
+            .background {
+              RoundedRectangle(cornerRadius: 50)
+                .fill(.quinary)
+            }
           }
         }
       }
@@ -170,6 +171,46 @@ struct EventDetail: View {
 #Preview {
   NavigationStack {
     EventDetail()
+  }
+}
+
+private struct EventDetailHeader: View {
+
+  @Binding var scrollPosition: CGPoint
+
+  var body: some View {
+    VStack {
+      GeometryReader { reader in
+        Image(.meetup)
+          .resizable()
+          .aspectRatio(contentMode: .fill)
+          .frame(width: reader.size.width)
+          .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+      }
+      .frame(maxWidth: .infinity, maxHeight: 250)
+      .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+      .padding(3)
+      .background {
+        RoundedRectangle(cornerRadius: 8, style: .continuous)
+          .foregroundStyle(.background)
+      }
+
+      Text("65º CocoaHeads @ Apple Developer Academy Mackenzie")
+        .font(.title)
+        .multilineTextAlignment(.center)
+    }
+    .blur(radius: min(-(scrollPosition.y / 35), 15))
+    .rotationEffect(
+      .degrees(
+        -max(
+          min(Double(-scrollPosition.y) / 50, 2),
+          0
+        )
+      )
+    )
+    .offset(y: max(scrollPosition.y / 2, -100))
+    .frame(alignment: .top)
+    .padding(.horizontal)
   }
 }
 
