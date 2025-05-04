@@ -16,14 +16,11 @@ struct EventDetail: View {
 
   var body: some View {
     ZStack(alignment: .top) {
-      GeometryReader { proxy in
-        EventDetailHeader(scrollPosition: $scrollPosition)
-          .padding(.vertical)
-          .border(.pink)
-          .onAppear {
-            headerSize = proxy.size.height
-          }
-      }
+      EventDetailHeader(scrollPosition: $scrollPosition)
+        .padding(.vertical)
+        .onPreferenceChange(HeaderHeightKey.self) { [$headerSize] height in
+          $headerSize.wrappedValue = height
+        }
 
       ScrollView {
         PositionObservingView(
@@ -31,7 +28,6 @@ struct EventDetail: View {
           position: $scrollPosition
         ) {
           Color.clear
-//            .frame(height: 330)
             .frame(height: headerSize)
         }
 
@@ -174,6 +170,13 @@ struct EventDetail: View {
   }
 }
 
+private struct HeaderHeightKey: PreferenceKey {
+  static let defaultValue: CGFloat = 0
+  static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+    value = nextValue()
+  }
+}
+
 private struct EventDetailHeader: View {
 
   @Binding var scrollPosition: CGPoint
@@ -199,6 +202,12 @@ private struct EventDetailHeader: View {
         .font(.title)
         .multilineTextAlignment(.center)
     }
+    .background(
+      GeometryReader { proxy in
+        Color.clear
+          .preference(key: HeaderHeightKey.self, value: proxy.size.height)
+      }
+    )
     .blur(radius: min(-(scrollPosition.y / 35), 15))
     .rotationEffect(
       .degrees(
