@@ -45,7 +45,6 @@ struct DateFeedView: View, FeedViewProtocol {
   DateFeedView(
     feedItem: DateFeedItem(dates: [
       Date(),
-      Date(),
+      Date()
     ]))
-
 }

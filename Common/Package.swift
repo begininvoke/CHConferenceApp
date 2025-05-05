@@ -10,7 +10,7 @@ let package = Package(
     .tvOS(.v17),
     .macOS(.v14),
     .visionOS(.v1),
-    .watchOS(.v10),
+    .watchOS(.v10)
   ],
   products: [
     // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -25,6 +25,6 @@ let package = Package(
       name: "Common"),
     .testTarget(
       name: "CommonTests",
-      dependencies: ["Common"]),
+      dependencies: ["Common"])
   ]
 )

@@ -10,30 +10,44 @@ import SwiftUI
 // TODO: This list should scroll horizontally with cards under other cards on small screen sizes, and just be a grid on larger screens
 // Maybe the structure itself for larger screens is different
 struct EventList: View {
-  @State private var isPresented = false
+  let events: [Event]
+
+  @State private var isPresented: Event?
 
   var body: some View {
-    Button {
-      isPresented.toggle()
-    } label: {
-      Ticket()
-    }
-    .buttonStyle(.plain)
-    .padding()
-    .fullScreenCover(isPresented: $isPresented) {
-      NavigationStack {
-        EventDetail()
+    VStack(alignment: .leading) {
+      NavigationTitle("Eventos")
+
+      if events.isEmpty {
+        ContentUnavailableView(
+          "Não tem eventos cadastrados (TODO: Copy)",
+          systemImage: "tuningfork"
+        )
+        // TODO: Make ChapterSelectionView's position static
+        Text("outro TODO: fixar a navegação")
+      } else {
+        ForEach(events) { event in
+          // TODO: Wallet-like effect with a lot of cards for small screens, grid for larger screens
+          Button {
+            isPresented = event
+          } label: {
+            Ticket()
+          }
+          .buttonStyle(.plain)
+        }
       }
     }
-    .toolbar {
-      ToolbarItem(placement: .principal) {
-        NavigationTitle("Eventos")
-          .frame(maxWidth: .infinity, alignment: .leading)
+    .padding()
+    .fullScreenCover(item: $isPresented) { event in
+      NavigationStack {
+        EventDetail(event: event)
       }
     }
   }
 }
 
 #Preview {
-  EventList()
+  EventList(events: [
+    .mock
+  ])
 }

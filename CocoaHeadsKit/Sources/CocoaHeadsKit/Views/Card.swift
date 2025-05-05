@@ -29,14 +29,27 @@ struct Card<Content: View>: View {
     .frame(maxWidth: .infinity)
     .background {
       RoundedRectangle(cornerRadius: 20, style: .continuous)
-        .fill(.white)
+        .fill(Color(.systemBackground))
         .shadow(color: .black.opacity(0.08), radius: 2, x: 0, y: 4)
     }
   }
 }
 
 #Preview {
-  Card {
-    Text("Olá CocoaHeads")
+  VStack {
+    Card {
+      Text("Olá CocoaHeads")
+    }
+
+    Card(title: "CocoaHeads, olá!") {
+      Text("Olá CocoaHeads")
+    }
+  }
+  .padding()
+  .frame(maxHeight: .infinity)
+  .background {
+    Rectangle()
+      .fill(.secondary)
+      .ignoresSafeArea()
   }
 }

@@ -8,15 +8,22 @@
 import SwiftUI
 
 struct ChapterSelectionView: View {
+
+  @Binding var selectedChapter: Chapter?
+  var availableChapters: [Chapter]
+
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack {
-        ChapterSelectionButton(title: "Belo-Horizonte", isSelected: false)
-        ChapterSelectionButton(title: "Fortaleza", isSelected: false)
-        ChapterSelectionButton(title: "Campinas", isSelected: false)
-        ChapterSelectionButton(title: "Curitiba", isSelected: false)
-        ChapterSelectionButton(title: "Rio de Janeiro", isSelected: false)
-        ChapterSelectionButton(title: "São Paulo", isSelected: true)
+        ForEach(availableChapters) { chapter in
+          ChapterSelectionButton(
+            title: chapter.title,
+            isSelected: selectedChapter == chapter
+          )
+          .onTapGesture {
+            selectedChapter = chapter
+          }
+        }
       }
       .padding(.horizontal)
     }
@@ -40,10 +47,21 @@ struct ChapterSelectionButton: View {
             .stroke(.black.opacity(0.1), lineWidth: 1)
         }
       }
-      .animation(.default, value: isSelected)
+      .animation(.default.speed(1.5), value: isSelected)
   }
 }
 
 #Preview {
-  ChapterSelectionView()
+  @Previewable @State var selectedChapter: Chapter? = Chapter(title: "São Paulo", events: [])
+  ChapterSelectionView(
+    selectedChapter: $selectedChapter,
+    availableChapters: [
+      Chapter(title: "Belo-Horizonte", events: []),
+      Chapter(title: "Fortaleza", events: []),
+      Chapter(title: "Campinas", events: []),
+      Chapter(title: "Curitiba", events: []),
+      Chapter(title: "Rio de Janeiro", events: []),
+      Chapter(title: "São Paulo", events: [])
+    ]
+  )
 }

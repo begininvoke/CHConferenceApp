@@ -19,32 +19,32 @@ struct CallToAction: ButtonStyle {
       .frame(maxWidth: .infinity)
       .background {
         RoundedRectangle(cornerRadius: 20, style: .continuous)
-        .fill(
-          LinearGradient(
-            colors: [
-              Color(.buttonTopGradient),
-              Color(.buttonBottomGradient)
-            ],
-            startPoint: .top,
-            endPoint: .bottom
+          .fill(
+            LinearGradient(
+              colors: [
+                Color(.buttonTopGradient),
+                Color(.buttonBottomGradient)
+              ],
+              startPoint: .top,
+              endPoint: .bottom
+            )
           )
-        )
-        .stroke(Color(.buttonBottomGradient))
-        .overlay {
-          if configuration.isPressed {
-            Color.black.opacity(0.2)
+          .stroke(Color(.buttonBottomGradient))
+          .overlay {
+            if configuration.isPressed {
+              Color.black.opacity(0.2)
+            }
           }
-        }
-        .mask {
-          RoundedRectangle(
-            cornerRadius: 20,
-            style: .continuous
-          )
-        }
-        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
-        .shadow(color: .black.opacity(0.09), radius: 10, x: 0, y: 10)
-        .shadow(color: .black.opacity(0.05), radius: 13, x: 0, y: 21)
-        .shadow(color: .black.opacity(0.01), radius: 15, x: 0, y: 38)
+          .mask {
+            RoundedRectangle(
+              cornerRadius: 20,
+              style: .continuous
+            )
+          }
+          .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+          .shadow(color: .black.opacity(0.09), radius: 10, x: 0, y: 10)
+          .shadow(color: .black.opacity(0.05), radius: 13, x: 0, y: 21)
+          .shadow(color: .black.opacity(0.01), radius: 15, x: 0, y: 38)
       }
   }
 }

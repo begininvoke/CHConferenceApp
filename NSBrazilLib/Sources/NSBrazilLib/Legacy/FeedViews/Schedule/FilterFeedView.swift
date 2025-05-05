@@ -85,14 +85,14 @@ struct FilterFeedView_Previews: PreviewProvider {
   static var items: [FeedItem] = [
     TalkFeedItem(date: Date(), name: "Jonas", speaker: "Jonas", image: ""),
     TalkFeedItem(date: Date(), name: "Jonas", speaker: "Jonas", image: ""),
-    TalkFeedItem(date: Date(), name: "Jonas", speaker: "Jonas", image: ""),
+    TalkFeedItem(date: Date(), name: "Jonas", speaker: "Jonas", image: "")
   ]
 
   static var previews: some View {
     let item = FilterFeedItem(feeds: [
       FilteredFeed(title: "Sexta", decoder: FeedDecoder(feedItems: items)),
       FilteredFeed(title: "Sabado", decoder: FeedDecoder(feedItems: items)),
-      FilteredFeed(title: "Domingo", decoder: FeedDecoder(feedItems: items)),
+      FilteredFeed(title: "Domingo", decoder: FeedDecoder(feedItems: items))
     ])
 
     return Group {

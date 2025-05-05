@@ -16,10 +16,10 @@ struct PositionObservingView<Content: View>: View {
         }
       )
       .onPreferenceChange(PreferenceKey.self) { [$position] position in
-          $position.wrappedValue = CGPoint(
-            x: position.x.rounded(),
-            y: position.y.rounded()
-          )
+        $position.wrappedValue = CGPoint(
+          x: position.x.rounded(),
+          y: position.y.rounded()
+        )
       }
   }
 

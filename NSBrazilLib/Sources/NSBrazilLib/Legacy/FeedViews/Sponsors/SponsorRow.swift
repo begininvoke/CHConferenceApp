@@ -32,6 +32,6 @@ struct SponsorRow: View {
         name: "Mercado Livre",
         link: URL(string: "https://mercadolivre.com")!,
         image: URL(string: "https://nsbrazil.com/images/app/meli-logo.png")!,
-        backgroundColor: "#BABACA"),
+        backgroundColor: "#BABACA")
     ])
 }

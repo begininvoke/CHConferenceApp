@@ -10,7 +10,7 @@ import SwiftUI
 // TODO: Maybe this should be a separate init for titleview only
 struct TitleSubtitleSystemImageView: View {
   let title: LocalizedStringKey
-  let subtitle: LocalizedStringKey
+  let subtitle: String
   let systemName: String
 
   var body: some View {
@@ -41,12 +41,12 @@ struct TitleView<Content: View>: View {
           .alignmentGuide(.titleSubtitleAlignment) { d in
             d[VerticalAlignment.center]
           }
-        
+
         content()
       }
       .fontWeight(.light)
       .kerning(-0.5)
-      
+
       Spacer()
     }
   }
@@ -58,7 +58,6 @@ extension VerticalAlignment {
       context[.leading]
     }
   }
-  
+
   static let titleSubtitleAlignment = VerticalAlignment(TitleSubtitleAlignment.self)
 }
-
