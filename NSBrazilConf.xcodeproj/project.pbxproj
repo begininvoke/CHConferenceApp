@@ -93,6 +93,8 @@
 		1D0A95332342E87700B2C582 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1D0A95382342E87700B2C582 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2211E38D2DC1004700D347E8 /* CocoaHeadsBR-Watch-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "CocoaHeadsBR-Watch-Info.plist"; sourceTree = "<group>"; };
+		2233E22B2DC83E4E008351FD /* CocoaHeadsBR Vision.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "CocoaHeadsBR Vision.entitlements"; path = "CocoaHeadsBR Vision/CocoaHeadsBR Vision.entitlements"; sourceTree = "<group>"; };
+		2233E22C2DC83F1F008351FD /* CocoaHeadsBR Watch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CocoaHeadsBR Watch.entitlements"; sourceTree = "<group>"; };
 		226DD9BF2DC0579B0026B3CA /* CocoaHeadsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CocoaHeadsKit; sourceTree = "<group>"; };
 		6BC95AE02C4C381400BFBF71 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		6BC95AE22C4C443600BFBF71 /* CustomCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCardView.swift; sourceTree = "<group>"; };
@@ -168,6 +170,8 @@
 		1D0A951E2342E87500B2C582 = {
 			isa = PBXGroup;
 			children = (
+				2233E22C2DC83F1F008351FD /* CocoaHeadsBR Watch.entitlements */,
+				2233E22B2DC83E4E008351FD /* CocoaHeadsBR Vision.entitlements */,
 				2211E38D2DC1004700D347E8 /* CocoaHeadsBR-Watch-Info.plist */,
 				B4BAA62D2C61542C0024B351 /* NSBrazilConf.xctestplan */,
 				226DD9BF2DC0579B0026B3CA /* CocoaHeadsKit */,
@@ -816,6 +820,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = "CocoaHeadsBR Watch.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CocoaHeadsBR Watch Watch App/Preview Content\"";
@@ -854,6 +859,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = "CocoaHeadsBR Watch.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CocoaHeadsBR Watch Watch App/Preview Content\"";
@@ -891,6 +897,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = "CocoaHeadsBR Vision/CocoaHeadsBR Vision.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CocoaHeadsBR Vision/Preview Content\"";
@@ -927,6 +934,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = "CocoaHeadsBR Vision/CocoaHeadsBR Vision.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CocoaHeadsBR Vision/Preview Content\"";
