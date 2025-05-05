@@ -40,7 +40,9 @@ extension Event {
   }
 }
 
+// TODO: Make a service protocol so we reach for a local mock when running debug builds
 final class CloudKitService {
+  // TODO: Mock for testing
   let container = CKContainer(identifier: "iCloud.br.com.cocoaHeads.conf")
 
   // TODO: Some form of persistency/caching
