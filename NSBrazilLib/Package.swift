@@ -19,9 +19,6 @@ let package = Package(
       targets: ["NSBrazilLib"])
   ],
   dependencies: [
-    .package(
-      url: "https://github.com/SwiftedMind/Puddles",
-      from: Version(2, 0, 0)),
     .package(path: "Common")
   ],
   targets: [

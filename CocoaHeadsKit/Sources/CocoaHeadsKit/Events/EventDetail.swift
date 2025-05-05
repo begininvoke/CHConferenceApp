@@ -9,10 +9,11 @@ import SwiftUI
 
 struct EventDetail: View {
 
+  let event: Event
+
   @State private var scrollPosition: CGPoint = .zero
   @State private var headerSize: CGFloat = .zero
-
-  @Environment(\.dismiss) var dismiss
+  @Environment(\.dismiss) private var dismiss
 
   var body: some View {
     ZStack(alignment: .top) {
@@ -61,9 +62,7 @@ struct EventDetail: View {
     }
 
     ToolbarItem(placement: .topBarTrailing) {
-      Button {
-        dismiss()
-      } label: {
+      ShareLink(item: event.rsvpURL) {
         Image(systemName: "square.and.arrow.up")
           .offset(y: -2)
           .toolbarStyle(scrollPosition: scrollPosition.y)
@@ -72,12 +71,14 @@ struct EventDetail: View {
     }
   }
 
+  @Environment(\.openURL) private var openURL
+
   @ViewBuilder
   var innerView: some View {
     VStack(alignment: .leading, spacing: 16) {
       Card {
         Button {
-          // noop
+          openURL(event.rsvpURL)
         } label: {
           Text("Confirmar presença! \(Image(systemName: "figure.walk"))")
         }
@@ -130,6 +131,11 @@ struct EventDetail: View {
         )
       }
 
+      // TODO:
+      Card(title: "TODO:") {
+        Text("Adicionar socials e um call to action para o código de conduta")
+      }
+
       Card(title: "Como chegar") {
         VStack {
           TitleSubtitleSystemImageView(
@@ -170,7 +176,7 @@ struct EventDetail: View {
 
 #Preview {
   NavigationStack {
-    EventDetail()
+    EventDetail(event: .mock)
   }
 }
 
