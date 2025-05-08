@@ -60,6 +60,8 @@ extension EventDetailUI: Identifiable {
 }
 
 extension EventDetailUI {
+  // TODO: This should be part of a base set of server driven UIs
+  // eg.: .sdui(.debug(.eventDetail(self)))
   func debug() -> EventDetailUI {
     .debug(self)
   }
