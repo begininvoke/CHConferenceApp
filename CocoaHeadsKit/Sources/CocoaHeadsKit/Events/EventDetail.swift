@@ -89,7 +89,7 @@ extension View {
       .padding()
       .background {
         Circle()
-          .fill(.white)
+          .fill(.background)
           .shadow(radius: scrollPosition < -100 ? 1 : 0)
           .animation(.default, value: scrollPosition)
       }
@@ -99,10 +99,10 @@ extension View {
 // FIXME: Color assets are crashing App Clip on TestFlight
 extension Color {
   static var buttonTopGradient: Color {
-    Color(red: 3, green: 118, blue: 69)
+    Color(uiColor: UIColor(red: 3 / 255, green: 118 / 255, blue: 69 / 255, alpha: 1))
   }
 
   static var buttonBottomGradient: Color {
-    Color(red: 3, green: 90, blue: 53)
+    Color(uiColor: UIColor(red: 3 / 255, green: 90 / 255, blue: 53 / 255, alpha: 1))
   }
 }

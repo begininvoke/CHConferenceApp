@@ -29,7 +29,7 @@ struct CallToAction: ButtonStyle {
               endPoint: .bottom
             )
           )
-          .stroke(Color(.buttonBottomGradient))
+          .stroke(Color.buttonBottomGradient)
           .overlay {
             if configuration.isPressed {
               Color.black.opacity(0.2)
