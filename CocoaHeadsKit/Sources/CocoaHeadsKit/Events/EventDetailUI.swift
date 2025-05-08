@@ -15,6 +15,7 @@ indirect enum EventDetailUI: Codable {
   case caption(text: String)
   case divider
   case link(URL, title: String?)
+  case map(address: String, lat: Double, lng: Double)
   case subtitle(String)
   case text(String)
   case titleSubtitle(title: String, subtitle: String, systemImage: String)
@@ -27,25 +28,27 @@ extension EventDetailUI: Identifiable {
   var id: String {
     switch self {
     case .card(let title, let edges, let insetBy, let ui):
-      return "card-\(title ?? "nil")-\(edges.rawValue)-\(insetBy ?? 0)-\(ui.map(\.id).joined(separator: ","))"
+      "card-\(title ?? "nil")-\(edges.rawValue)-\(insetBy ?? 0)-\(ui.map(\.id).joined(separator: ","))"
     case .carousel(let ui):
-      return "carousel-\(ui.map(\.id).joined(separator: ","))"
+      "carousel-\(ui.map(\.id).joined(separator: ","))"
     case .callToAction(let title, let url, let systemImage):
-      return "callToAction-\(title)-\(url.absoluteString)-\(systemImage ?? "nil")"
+      "callToAction-\(title)-\(url.absoluteString)-\(systemImage ?? "nil")"
     case .caption(let text):
-      return "caption-\(text)"
+      "caption-\(text)"
     case .divider:
-      return "divider"
+      "divider"
     case .link(let url, let title):
-      return "link-\(url.absoluteString)-\(title ?? "nil")"
+      "link-\(url.absoluteString)-\(title ?? "nil")"
+    case .map(address: let addr, lat: let lat, lng: let lng):
+      "map-\(addr)-\(lat)-\(lng)"
     case .subtitle(let text):
-      return "subtitle-\(text)"
+      "subtitle-\(text)"
     case .text(let text):
-      return "text-\(text)"
+      "text-\(text)"
     case .titleSubtitle(let title, let subtitle, let systemImage):
-      return "titleSubtitle-\(title)-\(subtitle)-\(systemImage)"
+      "titleSubtitle-\(title)-\(subtitle)-\(systemImage)"
     case .vstack(let ui):
-      return "vstack-\(ui.map(\.id).joined(separator: ","))"
+      "vstack-\(ui.map(\.id).joined(separator: ","))"
     }
   }
 }

@@ -74,13 +74,19 @@ extension Event {
               + "Não quer aparecer nas nossas redes? "
               + "Avise o organizador ou faça 🖐️ para a foto."
           ),
-          .callToAction(title: "Leia nosso código de conduta", url: .mock)
+          // TODO: Create in-app screen for this
+          .callToAction(title: "Leia nosso código de conduta", url: .codeOfConduct)
         ]
       ),
       .card(
-        title: "Como chegar",
+        title: "Onde",
         ui: [
-          .caption(text: "card de como chegar to-do, accordion element to-do")
+          .text("Rua Butantã 194, São Paulo - SP"),
+          .map(
+            address: "Rua Butantã 194, São Paulo - SP",
+            lat: location.coordinate.latitude,
+            lng: location.coordinate.longitude
+          )
         ]
       )
     ]

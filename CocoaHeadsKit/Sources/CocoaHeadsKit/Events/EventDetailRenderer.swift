@@ -47,6 +47,8 @@ struct EventDetailRenderer: View {
       Divider()
     case .link(let url, title: let title):
       LinkView(url: url, title: title)
+    case .map(address: let addr, lat: let lat, lng: let lng):
+      MapUI(address: addr, latitude: lat, longitude: lng)
     case .subtitle(let text):
       Text(LocalizedStringKey(text))
         .foregroundStyle(.secondary)
