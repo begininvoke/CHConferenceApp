@@ -22,8 +22,8 @@ struct CallToAction: ButtonStyle {
           .fill(
             LinearGradient(
               colors: [
-                Color(.buttonTopGradient),
-                Color(.buttonBottomGradient)
+                Color.buttonTopGradient,
+                Color.buttonBottomGradient
               ],
               startPoint: .top,
               endPoint: .bottom

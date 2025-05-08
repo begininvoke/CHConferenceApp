@@ -85,7 +85,7 @@ extension View {
   fileprivate func toolbarStyle(scrollPosition: CGFloat) -> some View {
     self
       .font(.caption)
-      .foregroundStyle(Color(.buttonBottomGradient))
+      .foregroundStyle(Color.buttonBottomGradient)
       .padding()
       .background {
         Circle()
@@ -93,5 +93,16 @@ extension View {
           .shadow(radius: scrollPosition < -100 ? 1 : 0)
           .animation(.default, value: scrollPosition)
       }
+  }
+}
+
+// FIXME: Color assets are crashing App Clip on TestFlight
+extension Color {
+  static var buttonTopGradient: Color {
+    Color(red: 3, green: 118, blue: 69)
+  }
+
+  static var buttonBottomGradient: Color {
+    Color(red: 3, green: 90, blue: 53)
   }
 }
