@@ -29,6 +29,11 @@ struct Event: Identifiable {
   let rsvpURL: URL
 }
 
+struct Talk {
+  let speaker: String
+  let title: String
+}
+
 extension Event {
   static var mock: Self {
     Event(
@@ -63,6 +68,7 @@ final class CloudKitService {
         var chapter = Chapter(from: chapterRecord)
         let eventRecords = chapterRecord["events"] as? [CKRecord.Reference]
         for eventReference in eventRecords ?? [] {
+          // taskgroup
           let eventRecord = try await database.record(for: eventReference.recordID)
           if let event = Event(from: eventRecord) {
             chapter?.events.append(event)

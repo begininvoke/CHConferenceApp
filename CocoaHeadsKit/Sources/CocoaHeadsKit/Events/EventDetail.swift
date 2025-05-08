@@ -17,7 +17,7 @@ struct EventDetail: View {
 
   var body: some View {
     ZStack(alignment: .top) {
-      EventDetailHeader(scrollPosition: $scrollPosition)
+      EventDetailHeader(event: event, scrollPosition: $scrollPosition)
         .padding(.vertical)
         .onPreferenceChange(HeaderHeightKey.self) { [$headerSize] height in
           $headerSize.wrappedValue = height
@@ -32,7 +32,10 @@ struct EventDetail: View {
             .frame(height: headerSize)
         }
 
-        innerView
+        VStack(alignment: .leading, spacing: 16) {
+          EventDetailRenderer(ui: event.ui)
+        }
+        .padding()
       }
       .coordinateSpace(name: "EventDetail")
       .background {
@@ -70,166 +73,11 @@ struct EventDetail: View {
       .buttonStyle(.plain)
     }
   }
-
-  @Environment(\.openURL) private var openURL
-
-  @ViewBuilder
-  var innerView: some View {
-    VStack(alignment: .leading, spacing: 16) {
-      Card {
-        Button {
-          openURL(event.rsvpURL)
-        } label: {
-          Text("Confirmar presença! \(Image(systemName: "figure.walk"))")
-        }
-        .buttonStyle(CallToAction())
-
-        Text(
-          "A entrada será permitida somente após o preenchimento dos dados"
-            + "necessários para cadastro no evento dentro do app Meetup."
-        )
-        .font(.footnote)
-        .fontWeight(.thin)
-        .italic()
-        .multilineTextAlignment(.center)
-        .frame(maxWidth: .infinity, alignment: .center)
-      }
-
-      Card(title: "Informações") {
-        VStack {
-          TitleSubtitleSystemImageView(
-            title: "Data",
-            subtitle: "Quinta-feira, 24 de abril de 2025",
-            systemName: "calendar"
-          )
-
-          Divider()
-
-          TitleSubtitleSystemImageView(
-            title: "Duração",
-            subtitle: "19:00 - 22:00 BRT",
-            systemName: "clock"
-          )
-
-          Divider()
-
-          TitleSubtitleSystemImageView(
-            title: "Endereço",
-            subtitle: "Av. Paulista, 1100 - São Paulo, SP",
-            systemName: "mappin"
-          )
-        }
-      }
-
-      Card(title: "Agenda") {
-        TitleSubtitleSystemImageView(
-          title: "Talks & Palestrantes",
-          subtitle:
-            "**Aleph Retamal**: HTTP e URLSession 101\n\n"
-            + "**Ruan Reis**: Swift Concurrency: Desafios na adaptação e implementação de código assíncrono",
-          systemName: "person.bubble"
-        )
-      }
-
-      // TODO:
-      Card(title: "TODO:") {
-        Text("Adicionar socials e um call to action para o código de conduta")
-      }
-
-      Card(title: "Como chegar") {
-        VStack {
-          TitleSubtitleSystemImageView(
-            title: "Carro",
-            subtitle: "O condomínio da OLX tem estacionamento para os convidados!",
-            systemName: "car"
-          )
-
-          Divider()
-            .padding(.vertical, 5)
-
-          TitleView(title: "Público", systemName: "bus") {
-            HStack {
-              Text("Brigadeiro")
-                .font(.callout)
-              Text("L2")
-                .font(.caption)
-                .foregroundStyle(.white)
-                .padding(3)
-                .background {
-                  Circle()
-                    .fill(Color(.buttonBottomGradient))
-                }
-            }
-            .padding(5)
-            .padding(.horizontal, 3)
-            .background {
-              RoundedRectangle(cornerRadius: 50)
-                .fill(.quinary)
-            }
-          }
-        }
-      }
-    }
-    .padding()
-  }
 }
 
-#Preview {
+#Preview("Full") {
   NavigationStack {
     EventDetail(event: .mock)
-  }
-}
-
-private struct HeaderHeightKey: PreferenceKey {
-  static let defaultValue: CGFloat = 0
-  static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-    value = nextValue()
-  }
-}
-
-private struct EventDetailHeader: View {
-
-  @Binding var scrollPosition: CGPoint
-
-  var body: some View {
-    VStack {
-      GeometryReader { reader in
-        Image(.meetup)
-          .resizable()
-          .aspectRatio(contentMode: .fill)
-          .frame(width: reader.size.width)
-          .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-      }
-      .frame(maxWidth: .infinity, maxHeight: 250)
-      .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-      .padding(3)
-      .background {
-        RoundedRectangle(cornerRadius: 8, style: .continuous)
-          .foregroundStyle(.background)
-      }
-
-      Text("65º CocoaHeads @ Apple Developer Academy Mackenzie")
-        .font(.title)
-        .multilineTextAlignment(.center)
-    }
-    .background(
-      GeometryReader { proxy in
-        Color.clear
-          .preference(key: HeaderHeightKey.self, value: proxy.size.height)
-      }
-    )
-    .blur(radius: min(-(scrollPosition.y / 35), 15))
-    .rotationEffect(
-      .degrees(
-        -max(
-          min(Double(-scrollPosition.y) / 50, 2),
-          0
-        )
-      )
-    )
-    .offset(y: max(scrollPosition.y / 2, -100))
-    .frame(alignment: .top)
-    .padding(.horizontal)
   }
 }
 

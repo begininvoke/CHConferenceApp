@@ -10,7 +10,7 @@ import SwiftUI
 // TODO: Maybe this should be a separate init for titleview only
 struct TitleSubtitleSystemImageView: View {
   let title: LocalizedStringKey
-  let subtitle: String
+  let subtitle: LocalizedStringKey
   let systemName: String
 
   var body: some View {
