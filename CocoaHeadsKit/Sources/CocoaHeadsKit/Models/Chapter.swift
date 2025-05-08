@@ -51,6 +51,7 @@ final class CloudKitService {
   let container = CKContainer(identifier: "iCloud.br.com.cocoaHeads.conf")
 
   // TODO: Some form of persistency/caching
+  // TODO: Break down in multiple steps - this is confusing as is
   func fetchData() async throws -> [Chapter] {
     let database = container.publicCloudDatabase
     let chapterRecords = try await database.records(
@@ -67,11 +68,16 @@ final class CloudKitService {
       case .success(let chapterRecord):
         var chapter = Chapter(from: chapterRecord)
         let eventRecords = chapterRecord["events"] as? [CKRecord.Reference]
-        for eventReference in eventRecords ?? [] {
-          // taskgroup
-          let eventRecord = try await database.record(for: eventReference.recordID)
-          if let event = Event(from: eventRecord) {
-            chapter?.events.append(event)
+        try await withThrowingTaskGroup(of: CKRecord.self) { group in
+          for eventReference in eventRecords ?? [] {
+            group.addTask {
+              try await database.record(for: eventReference.recordID)
+            }
+          }
+          for try await record in group {
+            if let event = Event(from: record) {
+              chapter?.events.append(event)
+            }
           }
         }
         if let chapter {
