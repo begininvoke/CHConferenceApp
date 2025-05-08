@@ -13,7 +13,9 @@ indirect enum EventDetailUI: Codable {
   // TODO: Action -> openURL instead of direct URL
   case callToAction(title: String, url: URL, systemImage: String?)
   case caption(text: String)
+  case debug(EventDetailUI)
   case divider
+  case empty
   case link(URL, title: String?)
   case map(address: String, lat: Double, lng: Double)
   case subtitle(String)
@@ -35,8 +37,12 @@ extension EventDetailUI: Identifiable {
       "callToAction-\(title)-\(url.absoluteString)-\(systemImage ?? "nil")"
     case .caption(let text):
       "caption-\(text)"
+    case .debug(let ui):
+      "debug-\(ui.id)"
     case .divider:
-      "divider"
+      "divider" + UUID().uuidString
+    case .empty:
+      ""
     case .link(let url, let title):
       "link-\(url.absoluteString)-\(title ?? "nil")"
     case .map(address: let addr, lat: let lat, lng: let lng):
@@ -50,6 +56,12 @@ extension EventDetailUI: Identifiable {
     case .vstack(let ui):
       "vstack-\(ui.map(\.id).joined(separator: ","))"
     }
+  }
+}
+
+extension EventDetailUI {
+  func debug() -> EventDetailUI {
+    .debug(self)
   }
 }
 

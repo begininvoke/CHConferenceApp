@@ -43,8 +43,15 @@ struct EventDetailRenderer: View {
         .italic()
         .multilineTextAlignment(.center)
         .frame(maxWidth: .infinity, alignment: .center)
+    case .debug(let ui):
+      // TODO: Flag to enable/disable this on app settings
+      if Config.isTestflightOrDebug {
+        EventDetailRenderer(ui: [ui])
+      }
     case .divider:
       Divider()
+    case .empty:
+      EmptyView()
     case .link(let url, title: let title):
       LinkView(url: url, title: title)
     case .map(address: let addr, lat: let lat, lng: let lng):

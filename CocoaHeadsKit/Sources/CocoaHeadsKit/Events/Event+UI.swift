@@ -5,18 +5,33 @@
 //  Created by Mauricio on 5/7/25.
 //
 
+import SwiftUI
+
 extension Event {
-  // TODO: Event should have duration
+  @MainActor // isAppClip
   var ui: [EventDetailUI] {
-    [
+    return [
       .card(
         title: nil,
         ui: [
-          .callToAction(title: "Confirmar presença!", url: .mock, systemImage: "figure.walk"),
-          .caption(
-            text: "A entrada será permitida somente após o preenchimento dos dados "
-              + "necessários para cadastro no evento dentro do app Meetup.")
-        ]),
+          .text("Running on app clip: \(UIApplication.shared.isAppClip)"),
+          .caption(text: "(Este card só aparece para usuários do TestFlight)")
+        ]
+      ).debug(),
+      // TODO: `EventDetailUI.appClip(enabled: Bool, ui: EventDetailUI` so we can encode this info
+      UIApplication.shared.isAppClip
+        ? .empty
+        : .card(
+          title: nil,
+          ui: [
+            .callToAction(title: "Confirmar presença!", url: .mock, systemImage: "figure.walk"),
+            .caption(
+              text: "A entrada será permitida somente após o preenchimento dos dados "
+                + "necessários para cadastro no evento dentro do app Meetup."),
+            .caption(
+              text: "(Esse card inteiro desaparece quando é um App Clip, dá uma olhada lá no TestFlight!)"
+            ).debug()
+          ]),
       .card(
         title: "Informações",
         ui: [
@@ -29,6 +44,7 @@ extension Event {
             .divider,
             .titleSubtitle(
               title: "Duração",
+              // TODO: Event should have duration
               subtitle:
                 date.formatted(date: .omitted, time: .shortened) + " - "
                 + date.advanced(by: 3600 * 3).formatted(date: .omitted, time: .shortened),
@@ -37,7 +53,7 @@ extension Event {
             .divider,
             .titleSubtitle(
               title: "Endereço",
-              subtitle: "Av. Paulista, 1100 - São Paulo, SP",
+              subtitle: "Rua Butantã, 194 - São Paulo, SP",
               systemImage: "mappin"
             )
           ])
@@ -49,7 +65,7 @@ extension Event {
           .speaker(name: "Aleph Retamal", talk: "URLSession 101"),
           .carousel(ui: [
             .link(.mock, title: "Canal YouTube"),
-            .link(.mock),
+            .link(.codeOfConduct),
             .link(.mock)
           ]),
           .speaker(

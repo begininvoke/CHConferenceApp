@@ -14,7 +14,7 @@ struct NSClipApp: App {
 
   var body: some Scene {
     WindowGroup {
-      Home()
+      AppClipView()
     }
   }
 }
