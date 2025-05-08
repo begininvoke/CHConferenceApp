@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension Event {
-  @MainActor // isAppClip
+  @MainActor  // isAppClip
   var ui: [EventDetailUI] {
     return [
       .card(
