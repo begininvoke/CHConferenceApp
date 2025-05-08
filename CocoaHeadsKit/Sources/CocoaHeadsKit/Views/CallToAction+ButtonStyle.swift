@@ -41,6 +41,7 @@ struct CallToAction: ButtonStyle {
               style: .continuous
             )
           }
+          // FIXME: Cascaded shadows are causing HORRIBLE perf
           .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
           .shadow(color: .black.opacity(0.09), radius: 10, x: 0, y: 10)
           .shadow(color: .black.opacity(0.05), radius: 13, x: 0, y: 21)

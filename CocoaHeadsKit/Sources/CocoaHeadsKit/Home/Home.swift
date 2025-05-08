@@ -42,17 +42,75 @@ public struct Home: View {
       }
     }
     .task {
+      await Config.fetchEnvironment()
       await fetchData()
     }
   }
-
-  let service = CloudKitService()
 
   private func fetchData() async {
     state = .loading
     do {
       let chapters = try await CloudKitService().fetchData()
       state = .loaded(chapters)
+    } catch {
+      state = .error
+    }
+  }
+}
+
+// TODO: Break things out from CocoaHeadsKit specifically for the AppClip – size reduction is important
+public struct AppClipView: View {
+  public init() {}
+
+  enum ViewState {
+    case loaded(Event)
+    case error
+    case loading
+  }
+
+  @State private var state = ViewState.loading
+
+  public var body: some View {
+    VStack {
+      switch state {
+      case .loading:
+        ProgressView()
+      case .loaded(let event):
+        EventDetail(event: event)
+      case .error:
+        ContentUnavailableView {
+          Text("Algum erro ocorreu")
+        } actions: {
+          Button {
+            Task {
+              await fetchData()
+            }
+          } label: {
+            Text("Tentar novamente")
+          }
+        }
+      }
+    }
+    .task {
+      await Config.fetchEnvironment()
+      await fetchData()
+    }
+  }
+
+  private func fetchData() async {
+    state = .loading
+    do {
+      let chapters = try await CloudKitService().fetchData()
+      guard
+        let event = chapters.first(where: {
+          !$0.events.isEmpty
+        })?.events.first
+      else {
+        state = .error
+        return
+      }
+
+      state = .loaded(event)
     } catch {
       state = .error
     }
@@ -90,4 +148,16 @@ struct LoadedHome: View {
 
 #Preview {
   Home()
+}
+
+extension UIApplication {
+  var isAppClip: Bool {
+    Bundle.main.isAppClip
+  }
+}
+
+extension Bundle {
+  var isAppClip: Bool {
+    infoDictionary?["NSAppClip"] != nil
+  }
 }

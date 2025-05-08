@@ -41,7 +41,7 @@
       "NoBlockComments" : true,
       "NoCasesWithOnlyFallthrough" : true,
       "NoEmptyTrailingClosureParentheses" : true,
-      "NoLabelsInCasePatterns" : true,
+      "NoLabelsInCasePatterns" : false,
       "NoLeadingUnderscores" : false,
       "NoParensAroundConditions" : true,
       "NoPlaygroundLiterals" : true,
