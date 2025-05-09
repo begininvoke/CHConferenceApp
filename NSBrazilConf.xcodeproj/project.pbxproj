@@ -514,7 +514,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "swift format lint -r . --strict --parallel\n";
+			shellScript = "swift format format -i . -r\nswift format lint -r . --strict --parallel\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

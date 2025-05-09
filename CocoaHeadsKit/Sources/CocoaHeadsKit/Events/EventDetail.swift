@@ -17,11 +17,89 @@ struct EventDetail: View {
 
   var body: some View {
     ZStack(alignment: .top) {
-      EventDetailHeader(event: event, scrollPosition: $scrollPosition)
-        .padding(.vertical)
-        .onPreferenceChange(HeaderHeightKey.self) { [$headerSize] height in
-          $headerSize.wrappedValue = height
+      EventDetailHeader(
+        title: event.title,
+        imageURL: nil,
+        scrollPosition: $scrollPosition
+      )
+      .padding(.vertical)
+      .onPreferenceChange(HeaderHeightKey.self) { [$headerSize] height in
+        $headerSize.wrappedValue = height
+      }
+
+      ScrollView {
+        PositionObservingView(
+          coordinateSpace: .named("EventDetail"),
+          position: $scrollPosition
+        ) {
+          Color.clear
+            .frame(height: headerSize)
         }
+
+        VStack(alignment: .leading, spacing: 16) {
+          EventDetailRenderer(ui: event.ui)
+        }
+        .padding()
+      }
+      .coordinateSpace(name: "EventDetail")
+      .background {
+        Rectangle().fill(.quinary)
+          .ignoresSafeArea()
+      }
+      .toolbarBackground(.hidden, for: .navigationBar)
+      .toolbar { toolbarItems }
+    }
+    .onChange(of: scrollPosition.y) {
+      if scrollPosition.y > 180 {
+        dismiss()
+      }
+    }
+  }
+
+  // TODO: Fix the fact that these buttons are not the same size
+  @ToolbarContentBuilder
+  var toolbarItems: some ToolbarContent {
+    ToolbarItem(placement: .topBarLeading) {
+      Button {
+        dismiss()
+      } label: {
+        Image(systemName: "chevron.down")
+          .toolbarStyle(scrollPosition: scrollPosition.y)
+      }
+      .buttonStyle(.plain)
+    }
+
+    ToolbarItem(placement: .topBarTrailing) {
+      ShareLink(item: event.rsvpURL) {
+        Image(systemName: "square.and.arrow.up")
+          .offset(y: -2)
+          .toolbarStyle(scrollPosition: scrollPosition.y)
+      }
+      .buttonStyle(.plain)
+    }
+  }
+}
+
+struct MeetupEventDetail: View {
+
+  let event: MeetupEvent
+
+  @State private var scrollPosition: CGPoint = .zero
+  @State private var headerSize: CGFloat = 0
+  @Environment(\.dismiss) private var dismiss
+
+  var body: some View {
+    ZStack(alignment: .top) {
+      EventDetailHeader(
+        title: event.title,
+        imageURL: event.image,
+        scrollPosition: $scrollPosition
+      )
+      .padding(.vertical)
+      .onPreferenceChange(HeaderHeightKey.self) { [$headerSize] height in
+        print("headerSize", height)
+        $headerSize.wrappedValue = height
+      }
 
       ScrollView {
         PositionObservingView(
@@ -65,7 +143,7 @@ struct EventDetail: View {
     }
 
     ToolbarItem(placement: .topBarTrailing) {
-      ShareLink(item: event.rsvpURL) {
+      ShareLink(item: event.url) {
         Image(systemName: "square.and.arrow.up")
           .offset(y: -2)
           .toolbarStyle(scrollPosition: scrollPosition.y)

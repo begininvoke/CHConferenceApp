@@ -1,11 +1,17 @@
 import SwiftUI
 
-struct PositionObservingView<Content: View>: View {
+public struct PositionObservingView<Content: View>: View {
+  public init(coordinateSpace: CoordinateSpace, position: Binding<CGPoint>, content: @escaping () -> Content) {
+    self.coordinateSpace = coordinateSpace
+    self._position = position
+    self.content = content
+  }
+  
   var coordinateSpace: CoordinateSpace
   @Binding var position: CGPoint
   @ViewBuilder var content: () -> Content
 
-  var body: some View {
+  public var body: some View {
     content()
       .background(
         GeometryReader { geometry in

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-indirect enum EventDetailUI: Codable {
+public indirect enum EventDetailUI: Codable {
   case card(title: String?, edges: Edge.Set, insetBy: CGFloat?, ui: [EventDetailUI])
   case carousel(ui: [EventDetailUI])
   // TODO: Action -> openURL instead of direct URL
@@ -27,7 +27,7 @@ indirect enum EventDetailUI: Codable {
 // MARK: Identifiable
 
 extension EventDetailUI: Identifiable {
-  var id: String {
+  public var id: String {
     switch self {
     case .card(let title, let edges, let insetBy, let ui):
       "card-\(title ?? "nil")-\(edges.rawValue)-\(insetBy ?? 0)-\(ui.map(\.id).joined(separator: ","))"
@@ -69,7 +69,7 @@ extension EventDetailUI {
 
 // MARK: Helper methods
 extension EventDetailUI {
-  static func card(title: String?, ui: [EventDetailUI]) -> EventDetailUI {
+  public static func card(title: String?, ui: [EventDetailUI]) -> EventDetailUI {
     return .card(title: title, edges: .all, insetBy: nil, ui: ui)
   }
 

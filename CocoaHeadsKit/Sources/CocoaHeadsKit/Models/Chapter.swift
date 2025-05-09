@@ -9,7 +9,7 @@ import CloudKit
 import Foundation
 
 // TODO: Move to a separate package, and then rework entirely for a server-driven UI approach
-struct Chapter: Identifiable {
+struct Chapter: Identifiable, Sendable {
   var id: String { title }  // There's a unique identifier on CKRecord
   let title: String
   var events: [Event]
@@ -21,8 +21,8 @@ extension Chapter: Equatable {
   }
 }
 
-struct Event: Identifiable {
-  var id: String { title }  // There's a unique identifier on CKRecord
+public struct Event: Identifiable, Sendable {
+  public var id: String { title }  // There's a unique identifier on CKRecord
   let title: String
   let location: CLLocation
   let date: Date
@@ -35,7 +35,7 @@ struct Talk {
 }
 
 extension Event {
-  static var mock: Self {
+  public static var mock: Self {
     Event(
       title: "65º CocoaHeads SP @ Apple Developer Academy Mackenzie",
       location: .init(latitude: 12.3456, longitude: 12.3456),

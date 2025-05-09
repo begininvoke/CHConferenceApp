@@ -133,7 +133,7 @@ struct LoadedHome: View {
           NavigationTitle("Eventos")
           Spacer()
           NavigationLink {
-            Creator()
+            Debug()
           } label: {
             Image(systemName: "gearshape")
               .font(.title)

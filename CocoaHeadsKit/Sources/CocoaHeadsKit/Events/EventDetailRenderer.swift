@@ -9,10 +9,14 @@ import SwiftUI
 
 // TODO: Break views into their own files
 
-struct EventDetailRenderer: View {
+public struct EventDetailRenderer: View {
+  public init(ui: [EventDetailUI]) {
+    self.ui = ui
+  }
+  
   let ui: [EventDetailUI]
 
-  var body: some View { ForEach(ui) { render(ui: $0) } }
+  public var body: some View { ForEach(ui) { render(ui: $0) } }
 
   @ViewBuilder
   private func render(ui: EventDetailUI) -> some View {
