@@ -18,6 +18,9 @@ struct Debug: View {
       NavigationLink("Meetup") {
         MeetupDebugging()
       }
+      NavigationLink("Event Detail UI Viewer") {
+        EventDetailUIViewer()
+      }
     }
     .navigationTitle("debug")
   }
