@@ -12,9 +12,18 @@ import SwiftUI
 @main
 struct NSClipApp: App {
 
+  @State private var isPresented = false
+
   var body: some Scene {
     WindowGroup {
-      AppClipView()
+      NavigationStack {
+        Button("crash app") {
+          isPresented.toggle()
+        }
+        .sheet(isPresented: $isPresented) {
+          AppClipView()
+        }
+      }
     }
   }
 }

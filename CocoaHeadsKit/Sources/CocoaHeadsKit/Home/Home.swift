@@ -129,12 +129,22 @@ struct LoadedHome: View {
   var body: some View {
     NavigationStack {
       ScrollView {
-        EventList(events: selectedChapter?.events ?? [])
+        HStack {
+          NavigationTitle("Eventos")
+          Spacer()
+          NavigationLink {
+            Creator()
+          } label: {
+            Image(systemName: "gearshape")
+              .font(.title)
+          }
+        }
+        .padding()
         ChapterSelectionView(
           selectedChapter: $selectedChapter,
           availableChapters: chapters
         )
-        .padding(.bottom)
+        EventList(events: selectedChapter?.events ?? [])
       }
     }
     .onAppear {

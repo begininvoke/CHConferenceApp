@@ -90,6 +90,22 @@ final class CloudKitService {
 
     return chapters
   }
+
+  func fetchUserRecordID() async throws -> String {
+    let ckRecord = try await container.userRecordID()
+    return ckRecord.recordName
+  }
+
+  func hasLeaderAccess() async throws -> Bool {
+    let database = container.publicCloudDatabase
+    let (results, _) = try await database.records(
+      matching: .init(
+        recordType: "Leaders",
+        predicate: NSPredicate(value: true)
+      )
+    )
+    return !results.isEmpty
+  }
 }
 
 extension Chapter {
