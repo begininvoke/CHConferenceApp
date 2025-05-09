@@ -97,7 +97,6 @@ struct MeetupEventDetail: View {
       )
       .padding(.vertical)
       .onPreferenceChange(HeaderHeightKey.self) { [$headerSize] height in
-        print("headerSize", height)
         $headerSize.wrappedValue = height
       }
 
