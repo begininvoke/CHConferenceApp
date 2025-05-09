@@ -16,15 +16,11 @@ struct EventList: View {
 
   var body: some View {
     VStack(alignment: .leading) {
-      NavigationTitle("Eventos")
-
       if events.isEmpty {
         ContentUnavailableView(
           "Não tem eventos cadastrados (TODO: Copy)",
           systemImage: "tuningfork"
         )
-        // TODO: Make ChapterSelectionView's position static
-        Text("outro TODO: fixar a navegação")
       } else {
         ForEach(events) { event in
           // TODO: Wallet-like effect with a lot of cards for small screens, grid for larger screens
