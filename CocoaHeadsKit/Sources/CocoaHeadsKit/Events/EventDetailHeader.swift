@@ -7,17 +7,15 @@
 
 import SwiftUI
 
-// TODO: Inject Image
-
 struct EventDetailHeader: View {
-  let event: Event
+  let title: String
+  let imageURL: URL?
   @Binding var scrollPosition: CGPoint
 
   var body: some View {
     VStack {
       GeometryReader { reader in
-        Image(.meetup)
-          .resizable()
+        AsyncImage(url: imageURL, scale: 2)
           .aspectRatio(contentMode: .fill)
           .frame(width: reader.size.width)
           .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -30,10 +28,11 @@ struct EventDetailHeader: View {
           .foregroundStyle(.background)
       }
 
-      Text(event.title)
+      Text(title)
         .font(.title)
         .multilineTextAlignment(.center)
     }
+    .padding(.bottom)
     .background(
       GeometryReader { proxy in
         Color.clear
