@@ -6,7 +6,7 @@
 //  Copyright © 2021 Cocoaheadsbr. All rights reserved.
 //
 
-@testable import CocoaHeadsKit
+import CocoaHeadsKit
 import SwiftUI
 
 @main

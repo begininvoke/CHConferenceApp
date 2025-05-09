@@ -7,12 +7,18 @@
 
 import SwiftUI
 
-struct EventDetailHeader: View {
+public struct EventDetailHeader: View {
+  public init(title: String, imageURL: URL? = nil, scrollPosition: Binding<CGPoint>) {
+    self.title = title
+    self.imageURL = imageURL
+    self._scrollPosition = scrollPosition
+  }
+  
   let title: String
   let imageURL: URL?
   @Binding var scrollPosition: CGPoint
 
-  var body: some View {
+  public var body: some View {
     VStack {
       GeometryReader { reader in
         AsyncImage(url: imageURL, scale: 2)
