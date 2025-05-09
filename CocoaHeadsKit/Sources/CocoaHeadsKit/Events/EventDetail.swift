@@ -172,14 +172,3 @@ extension View {
       }
   }
 }
-
-// FIXME: Color assets are crashing App Clip on TestFlight
-extension Color {
-  static var buttonTopGradient: Color {
-    Color(uiColor: UIColor(red: 3 / 255, green: 118 / 255, blue: 69 / 255, alpha: 1))
-  }
-
-  static var buttonBottomGradient: Color {
-    Color(uiColor: UIColor(red: 3 / 255, green: 90 / 255, blue: 53 / 255, alpha: 1))
-  }
-}
