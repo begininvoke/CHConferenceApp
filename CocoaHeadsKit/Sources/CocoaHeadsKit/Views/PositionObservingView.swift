@@ -6,7 +6,7 @@ public struct PositionObservingView<Content: View>: View {
     self._position = position
     self.content = content
   }
-  
+
   var coordinateSpace: CoordinateSpace
   @Binding var position: CGPoint
   @ViewBuilder var content: () -> Content

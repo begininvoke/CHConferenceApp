@@ -140,17 +140,7 @@ struct Debug: View {
     } catch {
       eventTitle =
         if let error = error as? MeetupService.Error {
-          // TODO: Shouldn't this be MeetupService.Error's `localizedDescription`?
-          switch error {
-          case .dateError:
-            "Não consegui encontrar ou fazer decode da data"
-          case .imageError:
-            "Não encontrei a URL da imagem"
-          case .pastEventError:
-            "Em caso de eventos passados, o Meetup redireciona para uma página de Login, sendo assim, não é possível extrair os dados"
-          case .urlError:
-            "Erro na URL"
-          }
+          error.localizedDescription
         } else {
           "error: \(error)"
         }

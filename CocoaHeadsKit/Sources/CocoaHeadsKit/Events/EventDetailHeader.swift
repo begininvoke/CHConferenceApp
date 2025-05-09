@@ -13,7 +13,7 @@ public struct EventDetailHeader: View {
     self.imageURL = imageURL
     self._scrollPosition = scrollPosition
   }
-  
+
   let title: String
   let imageURL: URL?
   @Binding var scrollPosition: CGPoint

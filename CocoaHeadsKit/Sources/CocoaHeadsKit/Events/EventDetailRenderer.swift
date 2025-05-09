@@ -13,7 +13,7 @@ public struct EventDetailRenderer: View {
   public init(ui: [EventDetailUI]) {
     self.ui = ui
   }
-  
+
   let ui: [EventDetailUI]
 
   public var body: some View { ForEach(ui) { render(ui: $0) } }
