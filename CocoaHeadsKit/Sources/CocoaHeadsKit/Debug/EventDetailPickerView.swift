@@ -11,7 +11,7 @@ struct EventDetailUIViewer: View {
 
   let elements: [EventDetailUI] = [
     .card(title: "Card Title", ui: [.text("Card Content")]),
-    .carousel(ui: [.text("Carousel Item 1"), .text("Carousel Item 2")]),
+    .carousel(ui: [.text("Carousel Item 1"), .text("Carousel Item 2"), .link(.apple)]),
     .callToAction(title: "Learn More", url: URL(string: "https://apple.com")!, systemImage: "link"),
     .caption(text: "This is a caption"),
     .debug(.text("Debug Info")),
@@ -25,30 +25,31 @@ struct EventDetailUIViewer: View {
     .vstack(ui: [.text("Item 1"), .text("Item 2")])
   ]
 
-  @State private var selectedElement: EventDetailUI?
+  @State private var uiElements: [EventDetailUI] = []
 
   var body: some View {
     VStack {
-      VStack {
-        if let selectedElement {
-          EventDetailRenderer(ui: [selectedElement])
-            .padding()
-            .border(Color.gray, width: 1)
-            .padding()
-        } else {
-          Text("Select an element to preview")
-            .foregroundStyle(.secondary)
+      if !uiElements.isEmpty {
+        List($uiElements, editActions: .all) { ui in
+          EventDetailRenderer(ui: [ui.wrappedValue])
             .padding()
         }
+        .listStyle(.grouped)
+      } else {
+        Text("Select an element to preview")
+          .foregroundStyle(.secondary)
+          .padding()
       }
-      .frame(minHeight: 300)
 
-      List(elements.indices, id: \.self) { index in
-        let element = elements[index]
+      List(elements) { element in
         Button(element.id.isEmpty ? "Empty Element" : element.id) {
-          selectedElement = element
+          uiElements.append(element)
         }
       }
     }
   }
+}
+
+#Preview {
+  EventDetailUIViewer()
 }

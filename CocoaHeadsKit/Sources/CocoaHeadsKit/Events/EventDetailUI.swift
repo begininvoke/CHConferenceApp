@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public indirect enum EventDetailUI: Codable {
+public indirect enum EventDetailUI: Codable, Sendable {
   case card(title: String?, edges: Edge.Set, insetBy: CGFloat?, ui: [EventDetailUI])
   case carousel(ui: [EventDetailUI])
   // TODO: Action -> openURL instead of direct URL

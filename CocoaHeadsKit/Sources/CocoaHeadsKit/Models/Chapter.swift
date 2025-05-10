@@ -45,69 +45,6 @@ extension Event {
   }
 }
 
-// TODO: Make a service protocol so we reach for a local mock when running debug builds
-final class CloudKitService {
-  // TODO: Mock for testing
-  let container = CKContainer(identifier: "iCloud.br.com.cocoaHeads.conf")
-
-  // TODO: Some form of persistency/caching
-  // TODO: Break down in multiple steps - this is confusing as is
-  func fetchData() async throws -> [Chapter] {
-    let database = container.publicCloudDatabase
-    let chapterRecords = try await database.records(
-      matching: .init(
-        recordType: "Chapter",
-        predicate: NSPredicate(value: true)
-      )
-    )
-    var chapters: [Chapter] = []
-
-    let (results, _) = chapterRecords
-    for (_, result) in results {
-      switch result {
-      case .success(let chapterRecord):
-        var chapter = Chapter(from: chapterRecord)
-        let eventRecords = chapterRecord["events"] as? [CKRecord.Reference]
-        try await withThrowingTaskGroup(of: CKRecord.self) { group in
-          for eventReference in eventRecords ?? [] {
-            group.addTask {
-              try await database.record(for: eventReference.recordID)
-            }
-          }
-          for try await record in group {
-            if let event = Event(from: record) {
-              chapter?.events.append(event)
-            }
-          }
-        }
-        if let chapter {
-          chapters.append(chapter)
-        }
-      case .failure(let error):
-        print(error)
-      }
-    }
-
-    return chapters
-  }
-
-  func fetchUserRecordID() async throws -> String {
-    let ckRecord = try await container.userRecordID()
-    return ckRecord.recordName
-  }
-
-  func hasLeaderAccess() async throws -> Bool {
-    let database = container.publicCloudDatabase
-    let (results, _) = try await database.records(
-      matching: .init(
-        recordType: "Leaders",
-        predicate: NSPredicate(value: true)
-      )
-    )
-    return !results.isEmpty
-  }
-}
-
 extension Chapter {
   init?(from record: CKRecord) {
     self.events = []

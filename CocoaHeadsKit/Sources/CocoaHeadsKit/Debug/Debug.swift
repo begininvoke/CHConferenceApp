@@ -1,5 +1,5 @@
 //
-//  Creator.swift
+//  Debug.swift
 //  CocoaHeadsKit
 //
 //  Created by Mauricio on 5/1/25.
@@ -10,19 +10,42 @@
 import SwiftUI
 
 struct Debug: View {
+
+  @State private var shouldShowPrivateSections = false
+
+  @Environment(\.cloudKitService) var cloudKit
+
   var body: some View {
     List {
-      NavigationLink("CloudKit") {
-        CloudKitDebugging()
+      Section {
+        NavigationLink("CloudKit") {
+          CloudKitDebugging()
+        }
       }
-      NavigationLink("Meetup") {
-        MeetupDebugging()
-      }
-      NavigationLink("Event Detail UI Viewer") {
-        EventDetailUIViewer()
+      if shouldShowPrivateSections {
+        Section {
+          NavigationLink("Meetup Parser") {
+            MeetupDebugging()
+          }
+          NavigationLink("Event Detail UI Viewer") {
+            EventDetailUIViewer()
+          }
+          NavigationLink("All pages") {
+            PageLoader()
+          }
+          NavigationLink("Page creator") {
+            Creator()
+          }
+        }
       }
     }
-    .navigationTitle("debug")
+    .navigationTitle("top secret 👻")
+    .task {
+      do {
+        shouldShowPrivateSections = try await cloudKit.fetchLeaderAccess()
+      } catch {}
+    }
+    .animation(.default, value: shouldShowPrivateSections)
   }
 }
 

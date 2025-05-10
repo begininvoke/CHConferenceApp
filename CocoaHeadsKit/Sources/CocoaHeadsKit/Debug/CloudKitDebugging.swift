@@ -12,6 +12,8 @@ struct CloudKitDebugging: View {
   @State private var recordName: String = ""
   @State private var hasAccess: String = ""
 
+  @Environment(\.cloudKitService) var cloudKit
+
   var body: some View {
     List {
       Section {
@@ -30,9 +32,8 @@ struct CloudKitDebugging: View {
   }
 
   func fetchRecordName() async {
-    let service = CloudKitService()
     do {
-      let id = try await service.fetchUserRecordID()
+      let id = try await cloudKit.fetchUserRecordID()
       recordName = id
     } catch {
       recordName = "fetch error - are you logged in icloud?"
@@ -40,10 +41,9 @@ struct CloudKitDebugging: View {
   }
 
   func fetchLeaderAccess() async {
-    let service = CloudKitService()
     do {
-      let fetchedAccess = try await service.hasLeaderAccess()
-      hasAccess = fetchedAccess ? "yes" : "no?"
+      let hasLeaderAccess = try await cloudKit.fetchLeaderAccess()
+      hasAccess = hasLeaderAccess ? "yes" : "no?"
     } catch {
       hasAccess = "no"
     }

@@ -36,7 +36,12 @@ struct EventList: View {
     .padding()
     .fullScreenCover(item: $isPresented) { event in
       NavigationStack {
-        EventDetail(event: event)
+        EventDetail(
+          title: event.title,
+          image: nil,
+          ui: event.ui,
+          shareURL: event.rsvpURL
+        )
       }
     }
   }

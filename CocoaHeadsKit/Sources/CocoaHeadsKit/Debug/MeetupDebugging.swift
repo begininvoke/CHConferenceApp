@@ -42,7 +42,12 @@ struct MeetupDebugging: View {
 
         if let meetupEvent {
           NavigationLink("Event detail screen for this meetup") {
-            MeetupEventDetail(event: meetupEvent)
+            EventDetail(
+              title: meetupEvent.title,
+              image: meetupEvent.image,
+              ui: meetupEvent.ui,
+              shareURL: meetupEvent.url
+            )
           }
         }
 
