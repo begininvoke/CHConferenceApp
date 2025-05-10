@@ -8,18 +8,20 @@
 import SwiftUI
 
 struct EventDetail: View {
-
-  let event: Event
+  let title: String
+  let image: URL?
+  let ui: [EventDetailUI]
+  let shareURL: URL
 
   @State private var scrollPosition: CGPoint = .zero
-  @State private var headerSize: CGFloat = .zero
+  @State private var headerSize: CGFloat = 0
   @Environment(\.dismiss) private var dismiss
 
   var body: some View {
     ZStack(alignment: .top) {
       EventDetailHeader(
-        title: event.title,
-        imageURL: nil,
+        title: title,
+        imageURL: image,
         scrollPosition: $scrollPosition
       )
       .padding(.vertical)
@@ -37,7 +39,7 @@ struct EventDetail: View {
         }
 
         VStack(alignment: .leading, spacing: 16) {
-          EventDetailRenderer(ui: event.ui)
+          EventDetailRenderer(ui: ui)
         }
         .padding()
       }
@@ -70,80 +72,7 @@ struct EventDetail: View {
     }
 
     ToolbarItem(placement: .topBarTrailing) {
-      ShareLink(item: event.rsvpURL) {
-        Image(systemName: "square.and.arrow.up")
-          .offset(y: -2)
-          .toolbarStyle(scrollPosition: scrollPosition.y)
-      }
-      .buttonStyle(.plain)
-    }
-  }
-}
-
-struct MeetupEventDetail: View {
-
-  let event: MeetupEvent
-
-  @State private var scrollPosition: CGPoint = .zero
-  @State private var headerSize: CGFloat = 0
-  @Environment(\.dismiss) private var dismiss
-
-  var body: some View {
-    ZStack(alignment: .top) {
-      EventDetailHeader(
-        title: event.title,
-        imageURL: event.image,
-        scrollPosition: $scrollPosition
-      )
-      .padding(.vertical)
-      .onPreferenceChange(HeaderHeightKey.self) { [$headerSize] height in
-        print("headerSize", height)
-        $headerSize.wrappedValue = height
-      }
-
-      ScrollView {
-        PositionObservingView(
-          coordinateSpace: .named("EventDetail"),
-          position: $scrollPosition
-        ) {
-          Color.clear
-            .frame(height: headerSize)
-        }
-
-        VStack(alignment: .leading, spacing: 16) {
-          EventDetailRenderer(ui: event.ui)
-        }
-        .padding()
-      }
-      .coordinateSpace(name: "EventDetail")
-      .background {
-        Rectangle().fill(.quinary)
-          .ignoresSafeArea()
-      }
-      .toolbarBackground(.hidden, for: .navigationBar)
-      .toolbar { toolbarItems }
-    }
-    .onChange(of: scrollPosition.y) {
-      if scrollPosition.y > 180 {
-        dismiss()
-      }
-    }
-  }
-
-  @ToolbarContentBuilder
-  var toolbarItems: some ToolbarContent {
-    ToolbarItem(placement: .topBarLeading) {
-      Button {
-        dismiss()
-      } label: {
-        Image(systemName: "chevron.down")
-          .toolbarStyle(scrollPosition: scrollPosition.y)
-      }
-      .buttonStyle(.plain)
-    }
-
-    ToolbarItem(placement: .topBarTrailing) {
-      ShareLink(item: event.url) {
+      ShareLink(item: shareURL) {
         Image(systemName: "square.and.arrow.up")
           .offset(y: -2)
           .toolbarStyle(scrollPosition: scrollPosition.y)
@@ -155,7 +84,12 @@ struct MeetupEventDetail: View {
 
 #Preview("Full") {
   NavigationStack {
-    EventDetail(event: .mock)
+    EventDetail(
+      title: "CocoaHeads @ Apple Developer Academy",
+      image: nil,
+      ui: Event.mock.ui,
+      shareURL: Event.mock.rsvpURL
+    )
   }
 }
 
@@ -171,16 +105,5 @@ extension View {
           .shadow(radius: scrollPosition < -100 ? 1 : 0)
           .animation(.default, value: scrollPosition)
       }
-  }
-}
-
-// FIXME: Color assets are crashing App Clip on TestFlight
-extension Color {
-  static var buttonTopGradient: Color {
-    Color(uiColor: UIColor(red: 3 / 255, green: 118 / 255, blue: 69 / 255, alpha: 1))
-  }
-
-  static var buttonBottomGradient: Color {
-    Color(uiColor: UIColor(red: 3 / 255, green: 90 / 255, blue: 53 / 255, alpha: 1))
   }
 }

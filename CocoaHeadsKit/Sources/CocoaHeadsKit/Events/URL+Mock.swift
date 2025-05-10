@@ -8,7 +8,7 @@
 import Foundation
 
 extension URL {
-  static var mock: URL {
+  static var apple: URL {
     URL(string: "https://apple.com")!
   }
 

@@ -1,39 +1,25 @@
 //
-//  Creator.swift
+//  MeetupDebugging.swift
 //  CocoaHeadsKit
 //
-//  Created by Mauricio on 5/1/25.
+//  Created by Mauricio on 5/9/25.
 //
-
-// TODO: Create a way for chapter leaders to create events on the app
 
 import SwiftUI
 
-struct Debug: View {
+struct MeetupDebugging: View {
 
-  @State private var recordName: String = ""
-  @State private var hasAccess: String = ""
   @State private var isLoading = false
-
   @State private var eventTitle: String = ""
   @State private var eventDate: String = ""
   @State private var eventLocation: String = ""
   @State private var eventDescription: String = ""
   @State private var eventRSVPLink: String = ""
   @State private var meetupEvent: MeetupEvent?
-
   @State private var textField: String = ""
 
   var body: some View {
     List {
-      Section {
-        Text("id: \(recordName)")
-        Text("is chapter leader: \(hasAccess)")
-        Button("Copy ID") {
-          UIPasteboard.general.string = recordName
-        }
-      }
-
       Section {
         TextField("Paste meetup link here", text: $textField)
         Button("Add example meetup link") {
@@ -56,7 +42,12 @@ struct Debug: View {
 
         if let meetupEvent {
           NavigationLink("Event detail screen for this meetup") {
-            MeetupEventDetail(event: meetupEvent)
+            EventDetail(
+              title: meetupEvent.title,
+              image: meetupEvent.image,
+              ui: meetupEvent.ui,
+              shareURL: meetupEvent.url
+            )
           }
         }
 
@@ -88,6 +79,7 @@ struct Debug: View {
             } placeholder: {
               Rectangle()
                 .fill(.tertiary)
+                .frame(minHeight: 150)
             }
             .mask {
               RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -97,33 +89,7 @@ struct Debug: View {
         }
       }
     }
-    .task {
-      async let name: Void = fetchRecordName()
-      async let access: Void = fetchLeaderAccess()
-      let _ = await [name, access]
-    }
-    .navigationTitle("debug")
     .animation(.default, value: meetupEvent)
-  }
-
-  func fetchRecordName() async {
-    let service = CloudKitService()
-    do {
-      let id = try await service.fetchUserRecordID()
-      recordName = id
-    } catch {
-      recordName = "fetch error - are you logged in icloud?"
-    }
-  }
-
-  func fetchLeaderAccess() async {
-    let service = CloudKitService()
-    do {
-      let fetchedAccess = try await service.hasLeaderAccess()
-      hasAccess = fetchedAccess ? "yes" : "no?"
-    } catch {
-      hasAccess = "no"
-    }
   }
 
   func scrapeEvent() async {
@@ -140,24 +106,10 @@ struct Debug: View {
     } catch {
       eventTitle =
         if let error = error as? MeetupService.Error {
-          // TODO: Shouldn't this be MeetupService.Error's `localizedDescription`?
-          switch error {
-          case .dateError:
-            "Não consegui encontrar ou fazer decode da data"
-          case .imageError:
-            "Não encontrei a URL da imagem"
-          case .pastEventError:
-            "Em caso de eventos passados, o Meetup redireciona para uma página de Login, sendo assim, não é possível extrair os dados"
-          case .urlError:
-            "Erro na URL"
-          }
+          error.localizedDescription
         } else {
           "error: \(error)"
         }
     }
   }
-}
-
-#Preview {
-  Debug()
 }

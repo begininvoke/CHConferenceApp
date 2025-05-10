@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct Ticket: View {
+
+  var imageURL: URL?
+
   var body: some View {
     TicketCard {
       header
         .padding()
 
-      Image(.meetup)
-        .resizable()
+      AsyncImage(url: imageURL, scale: 2)
         .aspectRatio(contentMode: .fill)
         .frame(height: 150)
         .clipped()

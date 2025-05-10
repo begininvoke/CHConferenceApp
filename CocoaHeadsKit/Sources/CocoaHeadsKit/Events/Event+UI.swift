@@ -24,7 +24,7 @@ extension Event {
         : .card(
           title: nil,
           ui: [
-            .callToAction(title: "Confirmar presença!", url: .mock, systemImage: "figure.walk"),
+            .callToAction(title: "Confirmar presença!", url: .apple, systemImage: "figure.walk"),
             .caption(
               text: "A entrada será permitida somente após o preenchimento dos dados "
                 + "necessários para cadastro no evento dentro do app Meetup."),
@@ -64,15 +64,15 @@ extension Event {
         ui: [
           .speaker(name: "Aleph Retamal", talk: "URLSession 101"),
           .carousel(ui: [
-            .link(.mock, title: "Canal YouTube"),
+            .link(.apple, title: "Canal YouTube"),
             .link(.codeOfConduct),
-            .link(.mock)
+            .link(.apple)
           ]),
           .speaker(
             name: "Ruan Reis",
             talk: "Swift Concurrency: Desafios na adaptação e implementação de código assíncrono"
           ),
-          .link(.mock, title: "LinkedIn")
+          .link(.apple, title: "LinkedIn")
         ]
       ),
       .card(

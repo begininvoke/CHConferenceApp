@@ -5,6 +5,7 @@
 //  Created by Mauricio on 5/9/25.
 //
 
+import Common
 import CoreLocation
 import SwiftUI
 
@@ -14,6 +15,21 @@ extension MeetupEvent {
     [
       .rsvpCard(url: url),
       .infoCard(date: date, address: address),
+      .descriptionCard(description),
+      .codeOfConduct,
+      .whereCard(
+        address: address,
+        location: location
+      )
+    ]
+  }
+
+  @MainActor
+  func ui(customDescription: String) -> [EventDetailUI] {
+    [
+      .rsvpCard(url: url),
+      .infoCard(date: date, address: address),
+      .descriptionCard(customDescription),
       .codeOfConduct,
       .whereCard(
         address: address,
@@ -72,6 +88,14 @@ extension EventDetailUI {
         ])
       ]
     )
+  }
+
+  fileprivate static func descriptionCard(_ description: String) -> EventDetailUI {
+    .card(
+      title: "Descrição",
+      ui: [
+        .text(description)
+      ])
   }
 
   fileprivate static var codeOfConduct: EventDetailUI {

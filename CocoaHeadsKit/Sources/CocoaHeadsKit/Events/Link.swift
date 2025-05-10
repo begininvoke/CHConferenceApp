@@ -37,6 +37,6 @@ struct LinkView: View {
 }
 
 #Preview {
-  LinkView(url: .mock, title: nil)
-  LinkView(url: .mock, title: "Apple ponto com")
+  LinkView(url: .apple, title: nil)
+  LinkView(url: .apple, title: "Apple ponto com")
 }
