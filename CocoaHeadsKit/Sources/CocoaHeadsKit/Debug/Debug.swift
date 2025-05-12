@@ -36,6 +36,9 @@ struct Debug: View {
           NavigationLink("Page creator") {
             Creator()
           }
+          NavigationLink("Event listing") {
+            EventListing()
+          }
         }
       }
     }

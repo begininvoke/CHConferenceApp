@@ -21,12 +21,15 @@ extension Chapter: Equatable {
   }
 }
 
-public struct Event: Identifiable, Sendable {
-  public var id: String { title }  // There's a unique identifier on CKRecord
-  let title: String
-  let location: CLLocation
-  let date: Date
-  let rsvpURL: URL
+public struct Event: Hashable, Identifiable, Sendable {
+  public var id: UUID
+  var title: String
+  var address: String
+  var location: CLLocation
+  var date: Date
+  var endDate: Date
+  var rsvpURL: URL
+  var page: String
 }
 
 struct Talk {
@@ -37,10 +40,14 @@ struct Talk {
 extension Event {
   public static var mock: Self {
     Event(
+      id: UUID(),
       title: "65º CocoaHeads SP @ Apple Developer Academy Mackenzie",
+      address: "av. paulista, 1100, SÃO PAULO, SP",
       location: .init(latitude: 12.3456, longitude: 12.3456),
       date: .now,
-      rsvpURL: URL(string: "https://meetup.com")!
+      endDate: .now.advanced(by: 3600 * 3),
+      rsvpURL: URL(string: "https://meetup.com")!,
+      page: "local-event-detail"
     )
   }
 }
@@ -55,18 +62,18 @@ extension Chapter {
 
 extension Event {
   init?(from record: CKRecord) {
-    guard
-      let title = record["title"] as? String,
-      let location: CLLocation = record["location"] as? CLLocation,
-      let date = record["date"] as? Date
-    else {
+    guard let id = UUID.init(uuidString: record.recordID.recordName) else {
       return nil
     }
 
-    self.title = title
-    self.location = location
-    self.date = date
+    self.id = id
+    self.title = record["title"] as? String ?? ""
+    self.location = record["location"] as? CLLocation ?? CLLocation(latitude: 0, longitude: 0)
+    self.date = record["date"] as? Date ?? .now
+    self.endDate = record["endDate"] as? Date ?? date.advanced(by: 3600 * 3)
     // TODO: Add to CloudKit
     self.rsvpURL = URL(string: "https://apple.com")!
+    self.address = (record["address"] as? String) ?? ""
+    self.page = (record["slug"] as? String) ?? ""
   }
 }

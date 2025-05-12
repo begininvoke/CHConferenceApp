@@ -27,7 +27,7 @@ struct EventList: View {
           Button {
             isPresented = event
           } label: {
-            Ticket()
+            Ticket(event: event)
           }
           .buttonStyle(.plain)
         }

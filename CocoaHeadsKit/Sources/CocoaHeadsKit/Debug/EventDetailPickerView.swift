@@ -40,12 +40,21 @@ struct EventDetailUIViewer: View {
           .foregroundStyle(.secondary)
           .padding()
       }
-
+    }
+    .sheet(isPresented: .constant(true)) {
       List(elements) { element in
         Button(element.id.isEmpty ? "Empty Element" : element.id) {
           uiElements.append(element)
         }
       }
+      .presentationDetents([
+        .fraction(0.1),
+        .medium,
+        .large
+      ])
+      .presentationDragIndicator(.visible)
+      .presentationBackgroundInteraction(.enabled)
+      .interactiveDismissDisabled()
     }
   }
 }

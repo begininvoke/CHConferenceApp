@@ -65,6 +65,7 @@ struct Creator: View {
             Text("Save")
           }
         }
+        .disabled(!canSave)
       }
     }
     .sheet(item: $sheetState) { sheet in
@@ -76,29 +77,65 @@ struct Creator: View {
           MeetupCreator(ui: $ui)
         }
       case .templatePicker:
-        Text("TO-DO: Build a bunch of templates and allow leaders to pick from them")
+        VStack {
+          Text("TO-DO: Build a bunch of templates and allow leaders to pick from them")
+          Button("Add a mock") {
+            ui = [.eventDetail(Event.mock.ui)]
+            sheetState = nil
+            textField = Event.mock.title
+          }
+        }
       case .createUIFromScratch:
         Text("TO-DO: Build a UI creator")
       }
     }
+    .alert(error, isPresented: $isAlertPresented) {
+      Button("OK") {
+        isAlertPresented = false
+      }
+    }
+  }
+
+  @State private var isAlertPresented = false
+  @State private var error: String = ""
+
+  private var canSave: Bool {
+    !textField.isEmpty && !ui.isEmpty
   }
 
   func savePage() async {
+    guard canSave else { return }
+    // TODO: guard for empty slug and ui
     isLoading = true
     do {
-      let slug =
-        chapter?.title
-        .lowercased()
-        .trim()
-        .folding(options: .diacriticInsensitive, locale: .current) ?? ""
-        + "/" + textField
+      let chapterTitle =
+        if let chapterTitle = chapter?.title {
+          "\(chapterTitle)/"
+        } else {
+          ""
+        }
+
+      let slug = (chapterTitle + textField).cleanAndLowercased()
 
       try await cloudKit.createPage(slug: slug, ui: ui)
+      // TODO: When this is TCA, display success notification after dismiss
+      dismiss()
     } catch {
-      // TODO: Alert?
+      isAlertPresented = true
+      self.error = error.localizedDescription
+      dump(error)
     }
     isLoading = false
-    dismiss()
+  }
+}
+
+// TODO: Move to a separate file
+extension String {
+  func cleanAndLowercased() -> String {
+    lowercased()
+      .trim()
+      .folding(options: .diacriticInsensitive, locale: .current)
+      .replacingOccurrences(of: " ", with: "")
   }
 }
 

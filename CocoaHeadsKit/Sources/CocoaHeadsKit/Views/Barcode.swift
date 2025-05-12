@@ -32,7 +32,11 @@ struct Barcode: View {
 
   private func generateBarcode() {
     guard
-      case let data = text.data(using: String.Encoding.ascii),
+      case let data =
+        text
+        .replacingOccurrences(of: "º", with: "")
+        .cleanAndLowercased()
+        .data(using: String.Encoding.ascii),
       case let context = CIContext(),
       let filter = CIFilter(name: "CICode128BarcodeGenerator"),
       case _ = filter.setValue(data, forKey: "inputMessage"),

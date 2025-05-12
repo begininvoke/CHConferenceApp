@@ -11,10 +11,11 @@ struct PageLoader: View {
 
   @Environment(\.cloudKitService) var cloudKit
   @State private var pageList: [String] = []
+  @State private var text = "Fetching page list from CloudKit"
 
   var body: some View {
     if pageList.isEmpty {
-      Text("Fetching page list from CloudKit")
+      Text(text)
         .task {
           await fetchData()
         }
@@ -31,7 +32,7 @@ struct PageLoader: View {
     do {
       pageList = try await cloudKit.fetchPageList().sorted()
       if pageList.isEmpty {
-        print("no pages available")
+        text = "no pages available"
       }
     } catch {
       // TODO: ?
