@@ -124,7 +124,11 @@ struct LoadedHome: View {
 
           // Start the visibility timer if the drag goes beyond 200
           if dragOffset > 200, buttonVisibilityTimer == nil {
-            buttonVisibilityTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
+            let timeInterval = Config.isTestflightOrDebug ? 0.0 : 3.0
+            buttonVisibilityTimer = Timer.scheduledTimer(
+              withTimeInterval: timeInterval,
+              repeats: false
+            ) { _ in
               $shouldShowButton.wrappedValue = true
             }
           }

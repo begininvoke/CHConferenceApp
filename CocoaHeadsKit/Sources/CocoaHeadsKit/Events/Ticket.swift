@@ -7,9 +7,12 @@
 
 import SwiftUI
 
+// TODO: Make this view modular/server-driven
+
 struct Ticket: View {
 
   var imageURL: URL?
+  let event: Event
 
   var body: some View {
     TicketCard {
@@ -36,7 +39,7 @@ struct Ticket: View {
         .frame(height: 1)
 
       VStack {
-        Barcode(text: "CocoaHeadsSaoPaulo")
+        Barcode(text: event.title)
           .frame(height: 100)
           .overlay {
             Text("Não será permitida a entrada sem inscrição!")
@@ -66,19 +69,22 @@ struct Ticket: View {
       VStack(alignment: .trailing) {
         Text("Data")
           .font(.caption)
-          .textCase(.uppercase)
-        Text("24 ABR")
-          .fontWeight(.bold)
+        Text(
+          event.endDate.formatted(
+            Date.FormatStyle().day().month()
+          )
+        )
+        .fontWeight(.bold)
       }
 
       VStack(alignment: .trailing) {
         Text("Horário")
           .font(.caption)
-          .textCase(.uppercase)
-        Text("19:00")
+        Text(event.date.formatted(date: .omitted, time: .shortened))
           .fontWeight(.bold)
       }
     }
+    .textCase(.uppercase)
     .fontDesign(.monospaced)
   }
 
@@ -86,15 +92,29 @@ struct Ticket: View {
   private var eventDetails: some View {
     titleSubtitleView(
       title: "Evento",
-      subtitle: "65º CocoaHeads @ Apple Developer Academy Mackenzie"
+      subtitle: event.title
     )
-    titleSubtitleView(title: "Localização", subtitle: "AV. Paulista, 1100, São Paulo, SP")
+    titleSubtitleView(
+      title: "Localização",
+      subtitle: event.address
+    )
     HStack {
-      titleSubtitleView(title: "Início", subtitle: "19:00")
+      titleSubtitleView(
+        title: "Início",
+        subtitle: event.date.formatted(date: .omitted, time: .shortened)
+      )
       Spacer()
-      titleSubtitleView(title: "Fim", subtitle: "22:00")
+      titleSubtitleView(
+        title: "Fim",
+        subtitle: event.endDate.formatted(date: .omitted, time: .shortened)
+      )
       Spacer()
-      titleSubtitleView(title: "Data", subtitle: "24 ABR")
+      titleSubtitleView(
+        title: "Data",
+        subtitle: event.date.formatted(
+          Date.FormatStyle().day().month()
+        )
+      )
     }
   }
 
@@ -112,6 +132,6 @@ struct Ticket: View {
 }
 
 #Preview {
-  Ticket()
+  Ticket(event: .mock)
     .padding()
 }

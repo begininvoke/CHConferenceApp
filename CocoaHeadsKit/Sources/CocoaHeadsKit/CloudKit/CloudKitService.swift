@@ -81,7 +81,58 @@ actor CloudKitService: Sendable {
     return hasLeaderAccess
   }
 
-  // TODO: Create a PageService for these
+  // MARK: - Events
+  // TODO: Create an EventService for these, same as page below (or not, idk if we'll keep this)
+  func fetchEventList() async throws -> [Event] {
+    let database = container.publicCloudDatabase
+    let (matchResults, _) = try await database.records(
+      matching: .init(
+        recordType: "Event",
+        predicate: NSPredicate(value: true)
+      )
+    )
+
+    var events: [Event] = []
+    for (_, result) in matchResults {
+      switch result {
+      case .success(let record):
+        if let event = Event(from: record) {
+          events.append(event)
+        }
+      case .failure(let error):
+        print("Error fetching event: \(error.localizedDescription)")
+      }
+    }
+
+    return events
+  }
+
+  func updateEvent(_ event: Event) async throws {
+    let database = container.publicCloudDatabase
+    let recordID = CKRecord.ID(recordName: event.id.uuidString)
+
+    do {
+      let record = try await database.record(for: recordID)
+      record["title"] = event.title
+      record["address"] = event.address
+      record["location"] = CLLocation(
+        latitude: event.location.coordinate.latitude, longitude: event.location.coordinate.longitude)
+      record["date"] = event.date
+      record["endDate"] = event.endDate
+      record["rsvpURL"] = event.rsvpURL.absoluteString
+      record["page"] = event.page
+      try await database.save(record)
+    } catch {
+      print("Failed to update event: \(error.localizedDescription)")
+      throw error
+    }
+  }
+
+  func createEvent(_ event: Event) async throws {
+
+  }
+
+  // TODO: Create a PageService for these - we need swift-dependencies for this
 
   func createPage(
     slug: String,
@@ -97,7 +148,13 @@ actor CloudKitService: Sendable {
     let database = container.publicCloudDatabase
     let record = CKRecord(recordType: "Page")
     let jsonUI = try encoder.encode(ui)
-    record["ui"] = jsonUI
+    guard let jsonUIString = String(data: jsonUI, encoding: .utf8) else {
+      // TODO: throw error
+      print("no ui lmao")
+      return
+    }
+    record["slug"] = slug
+    record["ui"] = jsonUIString
     try await database.save(record)
   }
 
