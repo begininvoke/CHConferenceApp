@@ -66,19 +66,25 @@ actor CloudKitService: Sendable {
     return ckRecord.recordName
   }
 
-  private(set) var hasLeaderAccess = false
+  private(set) var hasLeaderAccess: Bool?
 
   @discardableResult
   func fetchLeaderAccess() async throws -> Bool {
+    if let hasLeaderAccess { return hasLeaderAccess }
     let database = container.publicCloudDatabase
-    let (results, _) = try await database.records(
-      matching: .init(
-        recordType: "Leaders",
-        predicate: NSPredicate(value: true)
+    do {
+      let (results, _) = try await database.records(
+        matching: .init(
+          recordType: "Leaders",
+          predicate: NSPredicate(value: true)
+        )
       )
-    )
-    hasLeaderAccess = !results.isEmpty
-    return hasLeaderAccess
+      hasLeaderAccess = !results.isEmpty
+      return !results.isEmpty
+    } catch {
+      hasLeaderAccess = false
+      return false
+    }
   }
 
   // MARK: - Events

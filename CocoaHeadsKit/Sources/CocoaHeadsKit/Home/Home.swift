@@ -58,10 +58,11 @@ struct Home: View {
     do {
       let chapters = try await cloudKit.fetchData()
       state = .loaded(chapters)
-      try await cloudKit.fetchLeaderAccess()
     } catch {
       state = .error
     }
+
+    _ = try? await cloudKit.fetchLeaderAccess()
   }
 }
 
