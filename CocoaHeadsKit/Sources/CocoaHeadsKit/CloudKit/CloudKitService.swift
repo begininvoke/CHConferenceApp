@@ -10,7 +10,11 @@ import Foundation
 import SwiftUI
 
 extension EnvironmentValues {
-  @Entry var cloudKitService: CloudKitService = .init()
+  @Entry var cloudKitService: CloudKitService = .live
+}
+
+extension CloudKitService {
+  static var live = CloudKitService()
 }
 
 // TODO: Make a service protocol so we reach for a local mock when running debug builds
@@ -22,6 +26,8 @@ actor CloudKitService: Sendable {
 
   // TODO: Some form of persistency/caching
   // TODO: Break down in multiple steps - this is confusing as is
+
+  /// Fetches Chapters and their Events
   func fetchData() async throws -> [Chapter] {
     let database = container.publicCloudDatabase
     let chapterRecords = try await database.records(
@@ -38,19 +44,32 @@ actor CloudKitService: Sendable {
       case .success(let chapterRecord):
         var chapter = Chapter(from: chapterRecord)
         let eventRecords = chapterRecord["events"] as? [CKRecord.Reference]
-        try await withThrowingTaskGroup(of: CKRecord.self) { group in
-          for eventReference in eventRecords ?? [] {
-            group.addTask {
-              try await database.record(for: eventReference.recordID)
+        let eventIDs = eventRecords?.map(\.recordID) ?? []
+        if !eventIDs.isEmpty {
+          try await withCheckedThrowingContinuation { continuation in
+            let fetchOperation = CKFetchRecordsOperation(recordIDs: eventIDs)
+            fetchOperation.desiredKeys = ["title", "address", "location", "date", "endDate", "rsvpURL", "page"]
+            var fetchedEvents: [Event] = []
+            fetchOperation.perRecordResultBlock = { _, result in
+              switch result {
+              case .success(let record):
+                if let event = Event(from: record) {
+                  fetchedEvents.append(event)
+                }
+              case .failure(let error):
+                print("Error fetching event: \(error.localizedDescription)")
+              }
             }
-          }
-          for try await record in group {
-            if let event = Event(from: record) {
-              chapter?.events.append(event)
+            fetchOperation.fetchRecordsResultBlock = { _ in
+              chapter?.events = fetchedEvents
+              if let chapter {
+                chapters.append(chapter)
+              }
+              continuation.resume()
             }
+            database.add(fetchOperation)
           }
-        }
-        if let chapter {
+        } else if let chapter {
           chapters.append(chapter)
         }
       case .failure(let error):
@@ -87,36 +106,98 @@ actor CloudKitService: Sendable {
     }
   }
 
-  // MARK: - Events
-  // TODO: Create an EventService for these, same as page below (or not, idk if we'll keep this)
-  func fetchEventList() async throws -> [Event] {
+  // MARK: - Chapters
+  func update(_ chapter: Chapter, byAdding event: Event) async throws {
     let database = container.publicCloudDatabase
-    let (matchResults, _) = try await database.records(
-      matching: .init(
-        recordType: "Event",
-        predicate: NSPredicate(value: true)
-      )
-    )
+    let chapterID = CKRecord.ID(recordName: chapter.id.uuidString)
+    let eventID = CKRecord.ID(recordName: event.id.uuidString)
+    let eventReference = CKRecord.Reference(recordID: eventID, action: .none)
 
-    var events: [Event] = []
-    for (_, result) in matchResults {
-      switch result {
-      case .success(let record):
-        if let event = Event(from: record) {
-          events.append(event)
-        }
-      case .failure(let error):
-        print("Error fetching event: \(error.localizedDescription)")
+    do {
+      let chapterRecord = try await database.record(for: chapterID)
+      var currentEvents = chapterRecord["events"] as? [CKRecord.Reference] ?? []
+      if !currentEvents.contains(where: { $0.recordID == eventID }) {
+        currentEvents.append(eventReference)
+        chapterRecord["events"] = currentEvents
+        try await database.save(chapterRecord)
       }
+    } catch {
+      print("Failed to update chapter: \(error.localizedDescription)")
+      throw error
     }
-
-    return events
   }
 
+  // MARK: - Events
+  // TODO: Create an EventService for these, same as page below (or not, idk if we'll keep this)
+
+  /// Fetches all available events, even if they aren't part of any chapter.
+  func fetchEventList() async throws -> [Event] {
+    let database = container.publicCloudDatabase
+    let query = CKQuery(recordType: "Event", predicate: NSPredicate(value: true))
+    let operation = CKQueryOperation(query: query)
+    operation.desiredKeys = ["title", "address", "location", "date", "endDate", "rsvpURL", "page"]
+    operation.resultsLimit = CKQueryOperation.maximumResults
+
+    var events: [Event] = []
+
+    return try await withCheckedThrowingContinuation { continuation in
+      operation.recordMatchedBlock = { _, result in
+        switch result {
+        case .success(let record):
+          if let event = Event(from: record) {
+            events.append(event)
+          }
+        case .failure(let error):
+          print("Error fetching event: \(error.localizedDescription)")
+        }
+      }
+
+      operation.queryResultBlock = { _ in
+        continuation.resume(returning: events)
+      }
+
+      database.add(operation)
+    }
+  }
+
+  // TODO: As always, implement some form of caching for these images
+  /// Fetches only the imageAsset field for a given Event, returns data for the image
+  func fetchImageAsset(for event: Event) async throws -> Data? {
+    try await fetchImageAsset(for: event.id)
+  }
+
+  /// Fetches only the imageAsset field for a given UUID of an Event, returns data for the image
+  func fetchImageAsset(for id: UUID) async throws -> Data? {
+    let database = container.publicCloudDatabase
+    let recordID = CKRecord.ID(recordName: id.uuidString)
+    let operation = CKFetchRecordsOperation(recordIDs: [recordID])
+    operation.desiredKeys = ["imageAsset"]
+
+    return try await withCheckedThrowingContinuation { continuation in
+      operation.perRecordResultBlock = { _, result in
+        switch result {
+        case .success(let record):
+          if let asset = record["imageAsset"] as? CKAsset,
+            let fileURL = asset.fileURL,
+            let data = try? Data(contentsOf: fileURL)
+          {
+            continuation.resume(returning: data)
+          } else {
+            continuation.resume(returning: nil)
+          }
+        case .failure(let error):
+          continuation.resume(throwing: error)
+        }
+      }
+
+      database.add(operation)
+    }
+  }
+
+  // TODO: We need cloudinary integration for public image URLs - otherwise we won't be able to display images on the web
   func updateEvent(_ event: Event) async throws {
     let database = container.publicCloudDatabase
     let recordID = CKRecord.ID(recordName: event.id.uuidString)
-
     do {
       let record = try await database.record(for: recordID)
       record["title"] = event.title
@@ -127,7 +208,12 @@ actor CloudKitService: Sendable {
       record["endDate"] = event.endDate
       record["rsvpURL"] = event.rsvpURL.absoluteString
       record["page"] = event.page
+      let tempDir = FileManager.default.temporaryDirectory
+      let fileURL = tempDir.appendingPathComponent(UUID().uuidString + ".jpg")
+      try event.image?.write(to: fileURL)
+      record["imageAsset"] = CKAsset(fileURL: fileURL)
       try await database.save(record)
+      try? FileManager.default.removeItem(at: fileURL)
     } catch {
       print("Failed to update event: \(error.localizedDescription)")
       throw error
@@ -135,7 +221,28 @@ actor CloudKitService: Sendable {
   }
 
   func createEvent(_ event: Event) async throws {
-
+    let database = container.publicCloudDatabase
+    let recordID = CKRecord.ID(recordName: event.id.uuidString)
+    do {
+      let record = CKRecord(recordType: "Event", recordID: recordID)
+      record["title"] = event.title
+      record["address"] = event.address
+      record["location"] = CLLocation(
+        latitude: event.location.coordinate.latitude, longitude: event.location.coordinate.longitude)
+      record["date"] = event.date
+      record["endDate"] = event.endDate
+      record["rsvpURL"] = event.rsvpURL.absoluteString
+      record["page"] = event.page
+      let tempDir = FileManager.default.temporaryDirectory
+      let fileURL = tempDir.appendingPathComponent(UUID().uuidString + ".jpg")
+      try event.image?.write(to: fileURL)
+      record["imageAsset"] = CKAsset(fileURL: fileURL)
+      try await database.save(record)
+      try? FileManager.default.removeItem(at: fileURL)
+    } catch {
+      print("Failed to update event: \(error.localizedDescription)")
+      throw error
+    }
   }
 
   // TODO: Create a PageService for these - we need swift-dependencies for this
@@ -177,11 +284,10 @@ actor CloudKitService: Sendable {
     }
 
     let database = container.publicCloudDatabase
-    // TODO: Query specifically for the slug we need! This is *dumb*
     let (matchResults, _) = try await database.records(
       matching: .init(
         recordType: "Page",
-        predicate: NSPredicate(value: true)
+        predicate: NSPredicate(format: "slug == %@", slug)
       )
     )
 
@@ -189,15 +295,13 @@ actor CloudKitService: Sendable {
       switch result {
       case .success(let success):
         guard
-          let pageSlug = success["slug"] as? String,
-          slug == pageSlug,
           let pageJSON = success["ui"] as? String,
           let pageData = pageJSON.data(using: .utf8)
         else {
           // TODO: Force-update UI
           return [
             .eventDetail([
-              .text("Atualize o app")
+              .text("Atualize o app - Decode Error")
             ])
           ]
         }
@@ -212,7 +316,7 @@ actor CloudKitService: Sendable {
 
     return [
       .eventDetail([
-        .text("Atualize o app")
+        .text("Atualize o app - Couldn't find page at \(slug)")
       ])
     ]
   }

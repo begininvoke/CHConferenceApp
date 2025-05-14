@@ -10,7 +10,7 @@ import Foundation
 
 // TODO: Move to a separate package, and then rework entirely for a server-driven UI approach
 struct Chapter: Identifiable, Sendable {
-  var id: String { title }  // There's a unique identifier on CKRecord
+  var id: UUID
   let title: String
   var events: [Event]
 }
@@ -30,11 +30,7 @@ public struct Event: Hashable, Identifiable, Sendable {
   var endDate: Date
   var rsvpURL: URL
   var page: String
-}
-
-struct Talk {
-  let speaker: String
-  let title: String
+  var image: Data?
 }
 
 extension Event {
@@ -54,9 +50,16 @@ extension Event {
 
 extension Chapter {
   init?(from record: CKRecord) {
+    guard let id = UUID.init(uuidString: record.recordID.recordName) else {
+      return nil
+    }
+    self.id = id
     self.events = []
-    guard let name = record["name"] as? String else { return nil }
-    self.title = name
+    self.title = record["name"] as? String ?? ""
+  }
+
+  static func mock(_ title: String) -> Self {
+    self.init(id: UUID(), title: title, events: [])
   }
 }
 
@@ -71,9 +74,16 @@ extension Event {
     self.location = record["location"] as? CLLocation ?? CLLocation(latitude: 0, longitude: 0)
     self.date = record["date"] as? Date ?? .now
     self.endDate = record["endDate"] as? Date ?? date.advanced(by: 3600 * 3)
-    // TODO: Add to CloudKit
-    self.rsvpURL = URL(string: "https://apple.com")!
+    let urlString = (record["rsvpURL"] as? String) ?? ""
+    self.rsvpURL = URL(string: urlString) ?? URL(string: "https://cocoaheads.com.br")!
     self.address = (record["address"] as? String) ?? ""
-    self.page = (record["slug"] as? String) ?? ""
+    self.page = (record["page"] as? String) ?? ""
+
+    if let asset = record["imageAsset"] as? CKAsset,
+      let fileURL = asset.fileURL,
+      let data = try? Data(contentsOf: fileURL)
+    {
+      image = data
+    }
   }
 }

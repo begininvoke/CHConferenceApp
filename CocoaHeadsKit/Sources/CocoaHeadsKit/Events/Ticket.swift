@@ -12,14 +12,38 @@ import SwiftUI
 struct Ticket: View {
 
   var imageURL: URL?
+  @State private var imageData: Data?
   let event: Event
+
+  @Environment(\.cloudKitService) var cloudKit
+
+  @ViewBuilder
+  var image: some View {
+    ZStack {
+      if let imageData, let uiImage = UIImage(data: imageData) {
+        Image(uiImage: uiImage)
+          .resizable()
+      } else {
+        AsyncImage(url: imageURL, scale: 2)
+      }
+    }
+    .task {
+      guard imageURL == nil else { return }
+
+      do {
+        imageData = try await cloudKit.fetchImageAsset(for: event)
+      } catch {
+        print(error)
+      }
+    }
+  }
 
   var body: some View {
     TicketCard {
       header
         .padding()
 
-      AsyncImage(url: imageURL, scale: 2)
+      image
         .aspectRatio(contentMode: .fill)
         .frame(height: 150)
         .clipped()

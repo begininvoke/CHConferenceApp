@@ -29,6 +29,7 @@ public struct AppClipView: View {
         EventDetail(
           title: event.title,
           image: nil,
+          imageID: event.id,
           ui: event.ui,
           shareURL: event.rsvpURL
         )

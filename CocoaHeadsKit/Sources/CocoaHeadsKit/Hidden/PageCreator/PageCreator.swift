@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Creator: View {
+struct PageCreator: View {
 
   enum Sheet: String, Identifiable {
     case chapterPicker
@@ -49,6 +49,10 @@ struct Creator: View {
 
         Button("Create from scratch") {
           sheetState = .createUIFromScratch
+        }
+
+        if !ui.isEmpty {
+          Text("Content is loaded")
         }
       }
     }
@@ -116,6 +120,7 @@ struct Creator: View {
         }
 
       let slug = (chapterTitle + textField).cleanAndLowercased()
+        .replacingOccurrences(of: "º", with: "")
 
       try await cloudKit.createPage(slug: slug, ui: ui)
       // TODO: When this is TCA, display success notification after dismiss
@@ -136,34 +141,6 @@ extension String {
       .trim()
       .folding(options: .diacriticInsensitive, locale: .current)
       .replacingOccurrences(of: " ", with: "")
-  }
-}
-
-struct ChapterPicker: View {
-
-  @Binding var chapter: Chapter?
-  @State private var chapterList: [Chapter] = []
-  @State private var isLoading = false
-
-  @Environment(\.cloudKitService) var cloudKit
-  @Environment(\.dismiss) var dismiss
-
-  var body: some View {
-    List(chapterList) { chapter in
-      Button(chapter.title) {
-        self.chapter = chapter
-        dismiss()
-      }
-    }
-    .task {
-      isLoading = true
-      do {
-        chapterList = try await cloudKit.fetchData()
-        isLoading = false
-      } catch {
-        // TODO: ?
-      }
-    }
   }
 }
 
@@ -203,6 +180,7 @@ struct MeetupCreator: View {
             EventDetail(
               title: meetupEvent.title,
               image: meetupEvent.image,
+              imageID: nil,
               ui: meetupEvent.ui(customDescription: description),
               shareURL: meetupEvent.url
             )

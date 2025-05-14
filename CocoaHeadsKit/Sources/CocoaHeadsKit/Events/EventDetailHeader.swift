@@ -7,37 +7,21 @@
 
 import SwiftUI
 
-public struct EventDetailHeader: View {
-  public init(title: String, imageURL: URL? = nil, scrollPosition: Binding<CGPoint>) {
-    self.title = title
-    self.imageURL = imageURL
-    self._scrollPosition = scrollPosition
-  }
-
+struct EventDetailHeader: View {
   let title: String
   let imageURL: URL?
+  let imageID: UUID?
   @Binding var scrollPosition: CGPoint
+  @State private var height: CGFloat = 0
 
   public var body: some View {
     VStack {
-      GeometryReader { reader in
-        AsyncImage(url: imageURL, scale: 2)
-          .aspectRatio(contentMode: .fill)
-          .frame(width: reader.size.width)
-          .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-      }
-      .frame(maxWidth: .infinity, maxHeight: 250)
-      .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-      .padding(3)
-      .background {
-        RoundedRectangle(cornerRadius: 8, style: .continuous)
-          .foregroundStyle(.background)
-      }
-
+      InnerImage(imageURL: imageURL, imageID: imageID)
       Text(title)
         .font(.title)
         .multilineTextAlignment(.center)
     }
+    .id(title)
     .padding(.bottom)
     .background(
       GeometryReader { proxy in
@@ -63,6 +47,53 @@ public struct EventDetailHeader: View {
 struct HeaderHeightKey: PreferenceKey {
   static let defaultValue: CGFloat = 0
   static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-    value = nextValue()
+    let nextValue = nextValue()
+    if nextValue.rounded() < value.rounded() { return }
+    value = nextValue.rounded()
+  }
+}
+
+private struct InnerImage: View {
+  let imageURL: URL?
+  let imageID: UUID?
+  @Environment(\.cloudKitService) private var cloudKit
+  @State private var image: Image?
+
+  var body: some View {
+    ZStack {
+      if let image {
+        image
+          .resizable()
+      } else {
+        AsyncImage(url: imageURL, scale: 2)
+      }
+    }
+    .aspectRatio(contentMode: .fill)
+    .frame(maxWidth: .infinity, maxHeight: 250)
+    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+    .padding(3)
+    .background {
+      RoundedRectangle(cornerRadius: 8, style: .continuous)
+        .foregroundStyle(.background)
+    }
+    .task {
+      guard
+        imageURL == nil,
+        let id = imageID
+      else { return }
+
+      do {
+        guard
+          let data = try await cloudKit.fetchImageAsset(for: id),
+          let uiImage = UIImage(data: data)
+        else {
+          return
+        }
+
+        image = Image(uiImage: uiImage)
+      } catch {
+        print(error)
+      }
+    }
   }
 }

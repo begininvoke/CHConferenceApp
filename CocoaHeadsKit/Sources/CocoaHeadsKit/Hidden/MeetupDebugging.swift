@@ -45,6 +45,7 @@ struct MeetupDebugging: View {
             EventDetail(
               title: meetupEvent.title,
               image: meetupEvent.image,
+              imageID: nil,
               ui: meetupEvent.ui,
               shareURL: meetupEvent.url
             )
