@@ -11,9 +11,10 @@ struct PageCreator: View {
 
   enum Sheet: String, Identifiable {
     case chapterPicker
+    case createUIFromScratch
     case meetupScraper
     case templatePicker
-    case createUIFromScratch
+    case uiOrderingEditor
 
     var id: String { rawValue }
   }
@@ -52,7 +53,15 @@ struct PageCreator: View {
         }
 
         if !ui.isEmpty {
+          Button("Reorder UI") {
+            sheetState = .uiOrderingEditor
+          }
+
           Text("Content is loaded")
+
+          NavigationLink("Preview") {
+            PageRenderer(ui: ui)
+          }
         }
       }
     }
@@ -91,6 +100,8 @@ struct PageCreator: View {
         }
       case .createUIFromScratch:
         Text("TO-DO: Build a UI creator")
+      case .uiOrderingEditor:
+        UIOrderingEditor(ui: $ui)
       }
     }
     .alert(error, isPresented: $isAlertPresented) {
@@ -141,79 +152,5 @@ extension String {
       .trim()
       .folding(options: .diacriticInsensitive, locale: .current)
       .replacingOccurrences(of: " ", with: "")
-  }
-}
-
-struct MeetupCreator: View {
-
-  @Binding var ui: [UI]
-
-  @State private var isLoading = false
-  @State private var meetupURL: String = ""
-  @State private var meetupEvent: MeetupEvent?
-  @State private var description: String = ""
-
-  @Environment(\.dismiss) var dismiss
-
-  var body: some View {
-    List {
-      Section("Meetup") {
-        TextField("Paste Meetup URL here", text: $meetupURL)
-        Button("Scrape Event Data") {
-          Task {
-            isLoading = true
-            meetupEvent = nil
-            await scrapeEvent()
-            isLoading = false
-          }
-        }
-      }
-
-      Section("Data") {
-        if isLoading {
-          Text("Loading")
-            .font(.caption)
-        }
-
-        if let meetupEvent {
-          NavigationLink("Preview") {
-            EventDetail(
-              title: meetupEvent.title,
-              image: meetupEvent.image,
-              imageID: nil,
-              ui: meetupEvent.ui(customDescription: description),
-              shareURL: meetupEvent.url
-            )
-          }
-
-          TextField("Descrição", text: $description, axis: .vertical)
-
-          // TODO: Add speakers
-          Text("TO-DO: Uma forma de adicionar speakers, talks e links deles")
-        }
-      }
-    }
-    .toolbar {
-      Button("Done") {
-        guard let meetupEvent else { return }
-        ui = [
-          .eventDetail(meetupEvent.ui)
-        ]
-
-        dismiss()
-      }
-      .disabled(meetupEvent == nil)
-    }
-  }
-
-  func scrapeEvent() async {
-    do {
-      let meetup = MeetupService()
-      let event = try await meetup.event(from: meetupURL)
-      meetupEvent = event
-      description = event.description
-    } catch {
-      // TODO: Alert?
-    }
   }
 }

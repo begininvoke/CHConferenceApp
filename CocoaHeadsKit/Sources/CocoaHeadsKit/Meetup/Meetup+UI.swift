@@ -13,9 +13,11 @@ extension MeetupEvent {
   @MainActor
   var ui: [EventDetailUI] {
     [
+      .details(title: title, remoteImage: image, cloudKitImageID: nil, shareURL: url),
       .rsvpCard(url: url),
       .infoCard(date: date, address: address),
       .descriptionCard(description),
+      .socials(adding: nil),
       .codeOfConduct,
       .whereCard(
         address: address,
@@ -25,11 +27,17 @@ extension MeetupEvent {
   }
 
   @MainActor
-  func ui(customDescription: String) -> [EventDetailUI] {
+  func ui(
+    customDescription: String,
+    withExtraSocial socialURL: URL?,
+    speakers: EventDetailUI
+  ) -> [EventDetailUI] {
     [
       .rsvpCard(url: url),
       .infoCard(date: date, address: address),
       .descriptionCard(customDescription),
+      speakers,
+      .socials(adding: socialURL),
       .codeOfConduct,
       .whereCard(
         address: address,
@@ -96,6 +104,28 @@ extension EventDetailUI {
       ui: [
         .text(description)
       ])
+  }
+
+  fileprivate static func socials(adding link: URL?) -> EventDetailUI {
+    .card(
+      title: "Siga nossas redes sociais",
+      ui: [
+        .carousel(ui: [
+          .link(orEmpty: link),
+          .link(URL(string: "https://www.linkedin.com/company/cocoaheads-brasil")!),
+          .link(URL(string: "https://www.instagram.com/cocoaheadsbr/")!),
+          .link(URL(string: "https://bsky.app/profile/cocoaheads.com.br")!, title: "bluesky.app")
+        ])
+      ])
+  }
+
+  // TODO: Move to a better place
+  static func link(orEmpty url: URL?) -> EventDetailUI {
+    if let url {
+      .link(url)
+    } else {
+      .empty
+    }
   }
 
   fileprivate static var codeOfConduct: EventDetailUI {
