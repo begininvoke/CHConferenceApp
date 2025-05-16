@@ -33,7 +33,7 @@ struct EventDetail: View {
         $headerSize.wrappedValue = height
       }
 
-      ScrollView {
+      ScrollView(.vertical) {
         PositionObservingView(
           coordinateSpace: .named("EventDetail"),
           position: $scrollPosition
@@ -53,7 +53,11 @@ struct EventDetail: View {
           .ignoresSafeArea()
       }
       .toolbarBackground(.hidden, for: .navigationBar)
-      .toolbar { toolbarItems }
+      .toolbar {
+        if !Bundle.main.isAppClip {
+          toolbarItems
+        }
+      }
     }
     .onChange(of: scrollPosition.y) {
       if scrollPosition.y > 180 {
@@ -65,7 +69,6 @@ struct EventDetail: View {
     }
   }
 
-  #warning("FIXME: Fix the fact that these buttons are not the same size")
   @ToolbarContentBuilder
   var toolbarItems: some ToolbarContent {
     ToolbarItem(placement: .topBarLeading) {
@@ -73,6 +76,7 @@ struct EventDetail: View {
         dismiss()
       } label: {
         Image(systemName: "chevron.down")
+          .padding(4)/// For some reason, a `Button` is smaller than a `ShareLink`
           .toolbarStyle(scrollPosition: scrollPosition.y)
       }
       .buttonStyle(.plain)
