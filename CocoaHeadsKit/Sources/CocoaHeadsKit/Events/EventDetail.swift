@@ -111,7 +111,7 @@ extension View {
     if #available(iOS 26.0, *) {
       self
         .font(.caption)
-        .foregroundStyle(Color.buttonBottomGradient)
+        .foregroundStyle(Color(.toolbarItem))
     } else {
       self
         .font(.caption)
