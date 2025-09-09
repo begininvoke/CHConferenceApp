@@ -106,16 +106,23 @@ struct EventDetail: View {
 }
 
 extension View {
+  @ViewBuilder
   fileprivate func toolbarStyle(scrollPosition: CGFloat) -> some View {
-    self
-      .font(.caption)
-      .foregroundStyle(Color.buttonBottomGradient)
-      .padding()
-      .background {
-        Circle()
-          .fill(.background)
-          .shadow(radius: scrollPosition < -100 ? 1 : 0)
-          .animation(.default, value: scrollPosition)
-      }
+    if #available(iOS 26.0, *) {
+      self
+        .font(.caption)
+        .foregroundStyle(Color.buttonBottomGradient)
+    } else {
+      self
+        .font(.caption)
+        .foregroundStyle(Color.buttonBottomGradient)
+        .padding()
+        .background {
+          Circle()
+            .fill(.background)
+            .shadow(radius: scrollPosition < -100 ? 1 : 0)
+            .animation(.default, value: scrollPosition)
+        }
+    }
   }
 }
