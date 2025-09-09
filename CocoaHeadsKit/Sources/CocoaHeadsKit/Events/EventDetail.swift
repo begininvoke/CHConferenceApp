@@ -108,6 +108,18 @@ struct EventDetail: View {
 extension View {
   @ViewBuilder
   fileprivate func toolbarStyle(scrollPosition: CGFloat) -> some View {
+    #if os(visionOS)
+    self
+      .font(.caption)
+      .foregroundStyle(.white)
+      .padding()
+      .background {
+        Circle()
+          .fill(Color(.lightGray))
+          .shadow(radius: scrollPosition < -100 ? 1 : 0)
+          .animation(.default, value: scrollPosition)
+      }
+    #else
     if #available(iOS 26.0, *) {
       self
         .font(.caption)
@@ -124,5 +136,6 @@ extension View {
             .animation(.default, value: scrollPosition)
         }
     }
+    #endif
   }
 }
