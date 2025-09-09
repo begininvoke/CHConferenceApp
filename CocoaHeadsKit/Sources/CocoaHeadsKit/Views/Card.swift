@@ -25,11 +25,7 @@ struct Card<Content: View>: View {
     }
     .padding(contentInset.0, contentInset.1)
     .frame(maxWidth: .infinity)
-    .background {
-      RoundedRectangle(cornerRadius: 20, style: .continuous)
-        .fill(Color(.systemBackground))
-        .shadow(color: .black.opacity(0.08), radius: 2, x: 0, y: 4)
-    }
+    .ticketBackground()
   }
 }
 
@@ -49,5 +45,31 @@ struct Card<Content: View>: View {
     Rectangle()
       .fill(.secondary)
       .ignoresSafeArea()
+  }
+}
+
+extension View {
+  @ViewBuilder
+  fileprivate func ticketBackground() -> some View {
+    #if os(visionOS)
+    self
+      .background {
+        RoundedRectangle(cornerRadius: 20, style: .continuous)
+          .fill(Color(.lightGray))
+          .shadow(color: .black.opacity(0.08), radius: 2, x: 0, y: 4)
+      }
+    #else
+    if #available(iOS 26.0, *) {
+      self
+        .glassEffect(in: .rect(cornerRadius: 20, style: .continuous))
+    } else {
+      self
+        .background {
+          RoundedRectangle(cornerRadius: 20, style: .continuous)
+            .fill(Color(.systemBackground))
+            .shadow(color: .black.opacity(0.08), radius: 2, x: 0, y: 4)
+        }
+    }
+    #endif
   }
 }
