@@ -15,7 +15,7 @@ struct EventList: View {
   @State private var isPresented: Event?
 
   var body: some View {
-    VStack(alignment: .leading) {
+    VStack(alignment: .leading, spacing: 20) {
       if events.isEmpty {
         ContentUnavailableView(
           "Não encontramos eventos para este chapter",
@@ -30,6 +30,7 @@ struct EventList: View {
             Ticket(event: event)
           }
           .buttonStyle(.plain)
+          .buttonBorderShape(.roundedRectangle)
         }
       }
     }
