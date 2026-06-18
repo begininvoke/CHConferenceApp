@@ -5,6 +5,7 @@
 //  Created by Mauricio on 5/9/25.
 //
 
+import CocoaHeadsCore
 import Common
 import CoreLocation
 import SwiftUI
@@ -156,15 +157,15 @@ extension EventDetailUI {
     )
   }
 
-  fileprivate static func whereCard(address: String, location: CLLocation) -> EventDetailUI {
+  fileprivate static func whereCard(address: String, location: MeetupEvent.Location) -> EventDetailUI {
     .card(
       title: "Onde",
       ui: [
         .text(address),
         .map(
           address: address,
-          lat: location.coordinate.latitude,
-          lng: location.coordinate.longitude
+          lat: location.latitude,
+          lng: location.longitude
         )
       ]
     )

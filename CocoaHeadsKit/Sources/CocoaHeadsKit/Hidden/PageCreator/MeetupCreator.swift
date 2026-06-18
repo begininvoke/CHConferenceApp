@@ -5,6 +5,7 @@
 //  Created by Mauricio on 5/14/25.
 //
 
+import CocoaHeadsCore
 import SwiftUI
 
 struct MeetupSpeaker: Identifiable, Equatable {
@@ -212,4 +213,9 @@ struct MeetupCreator: View {
       // TODO: Alert?
     }
   }
+}
+
+#Preview {
+  @Previewable @State var ui: [UI] = []
+  MeetupCreator(ui: $ui)
 }
