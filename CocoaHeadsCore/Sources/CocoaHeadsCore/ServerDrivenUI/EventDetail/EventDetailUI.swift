@@ -5,12 +5,12 @@
 //  Created by Mauricio on 5/7/25.
 //
 
-import SwiftUI
+import Foundation
 
 // TODO: .largeLink(URL) -> LPLinkPresentation
 
 public indirect enum EventDetailUI: Codable, Sendable {
-  case card(title: String?, edges: Edge.Set, insetBy: CGFloat?, ui: [EventDetailUI])
+  case card(title: String?, edges: ServerEdge.Set, insetBy: CGFloat?, ui: [EventDetailUI])
   case carousel(ui: [EventDetailUI])
   // TODO: Action -> openURL instead of direct URL
   case callToAction(title: String, url: URL, systemImage: String?)

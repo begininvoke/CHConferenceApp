@@ -16,12 +16,15 @@ WORKDIR /build
 # This creates a cached layer that can be reused
 # as long as your Package.swift/Package.resolved
 # files do not change.
-COPY ./Package.* ./
+# CocoaHeadsCore is a local package referenced as ../CocoaHeadsCore,
+# so it must sit next to /build inside the container.
+COPY CocoaHeadsCore /CocoaHeadsCore
+COPY backend/Package.* ./
 RUN swift package resolve \
         $([ -f ./Package.resolved ] && echo "--force-resolved-versions" || true)
 
-# Copy entire repo into container
-COPY . .
+# Copy backend sources into container
+COPY backend/ ./
 
 RUN mkdir /staging
 
