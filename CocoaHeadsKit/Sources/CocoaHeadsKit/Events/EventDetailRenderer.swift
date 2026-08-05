@@ -24,7 +24,7 @@ public struct EventDetailRenderer: View {
   private func render(ui: EventDetailUI) -> some View {
     switch ui {
     case .card(title: let title, edges: let edges, insetBy: let insets, ui: let innerUI):
-      Card(title: title, contentInset: (edges, insets)) {
+      Card(title: title, contentInset: (edges.swiftUI, insets)) {
         EventDetailRenderer(ui: innerUI)
       }
     case .carousel(ui: let innerUI):

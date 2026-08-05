@@ -1,0 +1,10 @@
+# Build context for backend/Dockerfile is the repo root (the backend's
+# Package.swift references the local ../CocoaHeadsCore package).
+# Exclude everything except what the image build needs.
+*
+!backend
+!CocoaHeadsCore
+backend/.build/
+backend/.swiftpm/
+CocoaHeadsCore/.build/
+CocoaHeadsCore/.swiftpm/

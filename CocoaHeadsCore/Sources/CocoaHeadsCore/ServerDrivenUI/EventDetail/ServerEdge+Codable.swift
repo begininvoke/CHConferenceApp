@@ -1,22 +1,18 @@
 //
-//  Edge+Codable.swift
-//  CocoaHeadsKit
+//  ServerEdge+Codable.swift
+//  CocoaHeadsCore
 //
 //  Created by Mauricio on 5/7/25.
 //
 
-import SwiftUI
-
-// TODO: Move this to `Common`
-
-extension Edge.Set: @retroactive Codable {
+extension ServerEdge.Set: Codable {
   private enum CodingKeys: String, CodingKey {
     case top, leading, bottom, trailing, all, horizontal, vertical
   }
 
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    var edges: Edge.Set = []
+    var edges: ServerEdge.Set = []
 
     if try container.decodeIfPresent(Bool.self, forKey: .top) == true {
       edges.insert(.top)
