@@ -19,6 +19,15 @@ To execute tests, use the following command:
 swift test
 ```
 
+## Authentication
+
+The backend has two security layers: app authentication (API key + Apple App
+Attest) on every route, and user authentication (Sign in with Apple → backend
+JWTs) on user-scoped routes. See
+[docs/user-auth-spec.md](docs/user-auth-spec.md) for the design and
+[docs/user-auth-implementation.md](docs/user-auth-implementation.md) for the
+endpoints, client protocol, and required environment variables.
+
 ## Deployment
 
 **Note**: The production backend is hosted and managed by CocoaHeads Brasil on AWS infrastructure. Deployments are controlled by the CocoaHeads team and are triggered automatically upon merging to the main branch.
