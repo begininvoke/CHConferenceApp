@@ -21,7 +21,7 @@ struct TokenEncryption: Sendable {
     self.key = key
   }
 
-  static func load(from environment: Environment) throws -> TokenEncryption {
+  static func load() throws -> TokenEncryption {
     if let base64 = Environment.get("TOKEN_ENCRYPTION_KEY") {
       guard let data = Data(base64Encoded: base64), data.count == 32 else {
         throw AuthError.invalidEncryptionKey

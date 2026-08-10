@@ -57,7 +57,7 @@ func configureAuth(_ app: Application) async throws {
   }
 
   if Environment.get("TOKEN_ENCRYPTION_KEY") != nil || Environment.get("JWT_SIGNING_KEY") != nil {
-    app.tokenEncryption = try TokenEncryption.load(from: app.environment)
+    app.tokenEncryption = try TokenEncryption.load()
   } else {
     app.tokenEncryption = TokenEncryption(
       key: .init(data: Array("insecure-development-encryption-".utf8))

@@ -57,19 +57,16 @@ struct AuthController: RouteCollection {
       )
     }
 
-    let user: User
-    if let existing = try await User.query(on: req.db)
+    var user = try await User.query(on: req.db)
       .filter(\.$appleUserIdentifier == identity.subject.value)
       .first()
-    {
-      user = existing
-    } else {
-      user = User(appleUserIdentifier: identity.subject.value)
-    }
+      ?? User(appleUserIdentifier: identity.subject.value)
 
     // Name and email only arrive on the user's first authorization — persist
-    // them whenever present. The email may be a Hide-My-Email relay.
-    if let email = signIn.email ?? identity.email {
+    // them whenever present. The email may be a Hide-My-Email relay. Prefer
+    // the email from the verified identity token; the request-body value is
+    // client-supplied and only a fallback (the name has no token source).
+    if let email = identity.email ?? signIn.email {
       user.email = email
     }
     if let fullName = signIn.fullName {
@@ -80,7 +77,22 @@ struct AuthController: RouteCollection {
     if let encryptedRefreshToken {
       user.appleRefreshToken = encryptedRefreshToken
     }
-    try await user.save(on: req.db)
+    do {
+      try await user.save(on: req.db)
+    } catch let error where (error as? any DatabaseError)?.isConstraintFailure == true {
+      // Two concurrent first sign-ins raced on the unique Apple `sub`; adopt
+      // the row the winner created instead of failing.
+      guard
+        let existing = try await User.query(on: req.db)
+          .filter(\.$appleUserIdentifier == identity.subject.value)
+          .first()
+      else { throw error }
+      existing.email = user.email ?? existing.email
+      existing.fullName = user.fullName ?? existing.fullName
+      existing.appleRefreshToken = user.appleRefreshToken ?? existing.appleRefreshToken
+      try await existing.save(on: req.db)
+      user = existing
+    }
 
     // Associate the attested device key with the signed-in user.
     if let attestedKeyID = req.attestedKeyID {
@@ -108,6 +120,12 @@ struct AuthController: RouteCollection {
     return .noContent
   }
 }
+
+extension RefreshRequest: @retroactive RequestDecodable {}
+extension RefreshRequest: @retroactive ResponseEncodable {}
+extension RefreshRequest: @retroactive AsyncRequestDecodable {}
+extension RefreshRequest: @retroactive AsyncResponseEncodable {}
+extension RefreshRequest: @retroactive Content {}
 
 extension TokenResponse: @retroactive RequestDecodable {}
 extension TokenResponse: @retroactive ResponseEncodable {}

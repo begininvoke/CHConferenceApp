@@ -15,12 +15,25 @@ import Vapor
 /// deployment would need to move this to the database or a shared cache.
 actor ChallengeStore {
   static let challengeTTL: TimeInterval = 5 * 60
+  static let defaultMaxEntries = 100_000
 
+  private let maxEntries: Int
   private var challenges: [String: Date] = [:]
 
-  /// Issues a new random challenge (32 bytes).
+  init(maxEntries: Int = ChallengeStore.defaultMaxEntries) {
+    self.maxEntries = maxEntries
+  }
+
+  /// Issues a new random challenge (32 bytes). The store is bounded: at
+  /// capacity, the entry closest to expiry is evicted so a flood of challenge
+  /// requests cannot grow memory without limit.
   func issue() -> Data {
     prune()
+    if challenges.count >= maxEntries,
+      let oldest = challenges.min(by: { $0.value < $1.value })
+    {
+      challenges.removeValue(forKey: oldest.key)
+    }
     let challenge = Data((0..<32).map { _ in UInt8.random(in: .min ... .max) })
     challenges[challenge.base64EncodedString()] = Date().addingTimeInterval(Self.challengeTTL)
     return challenge
@@ -38,6 +51,8 @@ actor ChallengeStore {
     let now = Date()
     challenges = challenges.filter { $0.value > now }
   }
+
+  var count: Int { challenges.count }
 }
 
 extension Application {

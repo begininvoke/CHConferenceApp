@@ -35,6 +35,18 @@ final class AccountPurgeService: LifecycleHandler {
   static func purge(on application: Application) async {
     let graceDays = application.authConfiguration.accountPurgeGraceDays
     let cutoff = Date().addingTimeInterval(-TimeInterval(graceDays) * 24 * 60 * 60)
+
+    // Expired refresh tokens are dead weight; delete them. Revoked-but-
+    // unexpired rows are kept — reuse detection in `TokenService.rotate`
+    // depends on finding them.
+    do {
+      try await RefreshToken.query(on: application.db)
+        .filter(\.$expiresAt < Date())
+        .delete()
+    } catch {
+      application.logger.error("Expired refresh-token sweep failed: \(error)")
+    }
+
     do {
       let expired = try await User.query(on: application.db)
         .withDeleted()

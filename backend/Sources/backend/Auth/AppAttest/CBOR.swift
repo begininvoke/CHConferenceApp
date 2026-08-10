@@ -18,17 +18,23 @@ enum CBOR: Equatable, Sendable {
   case array([CBOR])
   case map([CBOR: CBOR])
 
-  enum DecodingError: Error {
+  enum DecodingError: Error, Equatable {
     case truncated
     case unsupportedType(UInt8)
     case indefiniteLengthUnsupported
     case invalidUTF8
     case trailingBytes
+    case nestingTooDeep
   }
+
+  /// Maximum container nesting; attacker-supplied input must not be able to
+  /// recurse the decoder into a stack overflow.
+  static let maxNestingDepth = 16
 
   static func decode(_ data: Data) throws -> CBOR {
     var reader = Reader(data: data)
-    let value = try reader.decodeItem()
+    let value = try reader.decodeItem(depth: 0)
+    guard reader.isAtEnd else { throw DecodingError.trailingBytes }
     return value
   }
 
@@ -66,7 +72,14 @@ enum CBOR: Equatable, Sendable {
       self.index = data.startIndex
     }
 
-    mutating func decodeItem() throws -> CBOR {
+    var isAtEnd: Bool { index >= data.endIndex }
+
+    private var remainingBytes: UInt64 {
+      UInt64(data.distance(from: index, to: data.endIndex))
+    }
+
+    mutating func decodeItem(depth: Int) throws -> CBOR {
+      guard depth < CBOR.maxNestingDepth else { throw DecodingError.nestingTooDeep }
       let initial = try readByte()
       let majorType = initial >> 5
       let additional = initial & 0x1F
@@ -89,18 +102,23 @@ enum CBOR: Equatable, Sendable {
         return .text(string)
       case 4:
         let count = try readLength(additional)
+        // Every element occupies at least one byte, so a declared count larger
+        // than the remaining input is malformed — reject it before allocating.
+        guard count <= remainingBytes else { throw DecodingError.truncated }
         var items: [CBOR] = []
         items.reserveCapacity(Int(count))
         for _ in 0..<count {
-          items.append(try decodeItem())
+          items.append(try decodeItem(depth: depth + 1))
         }
         return .array(items)
       case 5:
         let count = try readLength(additional)
+        // Every key/value pair occupies at least two bytes.
+        guard count <= remainingBytes / 2 else { throw DecodingError.truncated }
         var map: [CBOR: CBOR] = [:]
         for _ in 0..<count {
-          let key = try decodeItem()
-          let value = try decodeItem()
+          let key = try decodeItem(depth: depth + 1)
+          let value = try decodeItem(depth: depth + 1)
           map[key] = value
         }
         return .map(map)

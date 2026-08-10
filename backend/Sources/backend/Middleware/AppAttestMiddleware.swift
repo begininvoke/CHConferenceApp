@@ -65,13 +65,17 @@ struct AppAttestMiddleware: AsyncMiddleware {
       throw Abort(.unauthorized, reason: "Unknown App Attest key.")
     }
 
-    let collected = try await request.body.collect(max: nil).get()
+    // Respect the application's body-size limit — `max: nil` would buffer
+    // arbitrarily large request bodies.
+    let maxBodySize = request.application.routes.defaultMaxBodySize.value
+    let collected = try await request.body.collect(max: maxBodySize).get()
     let body = collected.map { Data(buffer: $0) } ?? Data()
     let clientDataHash = Data(SHA256.hash(data: challenge + body))
 
     let verifier = AppAttestVerifier(environment: config.appAttestEnvironment)
+    let newSignCount: Int
     do {
-      key.signCount = try verifier.verifyAssertion(
+      newSignCount = try verifier.verifyAssertion(
         assertion,
         publicKey: key.publicKey,
         clientDataHash: clientDataHash,
@@ -82,7 +86,13 @@ struct AppAttestMiddleware: AsyncMiddleware {
       request.logger.info("App Attest assertion rejected: \(error)")
       throw Abort(.unauthorized, reason: "Invalid App Attest assertion.")
     }
-    try await key.save(on: request.db)
+    // Conditional update so a concurrent assertion cannot move the counter
+    // backwards: only persist when the stored count is still lower.
+    try await AppAttestKey.query(on: request.db)
+      .filter(\.$id == key.requireID())
+      .filter(\.$signCount < newSignCount)
+      .set(\.$signCount, to: newSignCount)
+      .update()
 
     request.storage[AttestedKeyIDKey.self] = keyId
     return try await next.respond(to: request)

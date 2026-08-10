@@ -37,6 +37,54 @@ struct CBORTests {
       try CBOR.decode(Data([0x42, 0x01]))  // bytes(2) with only 1 byte present
     }
   }
+
+  @Test("Rejects an array header declaring 2^64-1 elements instead of crashing")
+  func hugeArrayCount() {
+    #expect(throws: CBOR.DecodingError.truncated) {
+      try CBOR.decode(Data([0x9B] + [UInt8](repeating: 0xFF, count: 8)))
+    }
+  }
+
+  @Test("Rejects a map header declaring 2^64-1 entries instead of crashing")
+  func hugeMapCount() {
+    #expect(throws: CBOR.DecodingError.truncated) {
+      try CBOR.decode(Data([0xBB] + [UInt8](repeating: 0xFF, count: 8)))
+    }
+  }
+
+  @Test("Rejects a huge-but-representable array count exceeding the input size")
+  func oversizedArrayCount() {
+    // array(1_000_000) with no elements following
+    #expect(throws: CBOR.DecodingError.truncated) {
+      try CBOR.decode(Data([0x9A, 0x00, 0x0F, 0x42, 0x40]))
+    }
+  }
+
+  @Test("Rejects nesting deeper than the limit instead of overflowing the stack")
+  func deepNesting() {
+    // 1000 nested single-element arrays
+    #expect(throws: CBOR.DecodingError.nestingTooDeep) {
+      try CBOR.decode(Data([UInt8](repeating: 0x81, count: 1000)))
+    }
+  }
+
+  @Test("Accepts nesting within the limit")
+  func shallowNesting() throws {
+    // 10 nested arrays around unsigned(0)
+    let value = try CBOR.decode(Data([UInt8](repeating: 0x81, count: 10) + [0x00]))
+    var current = value
+    for _ in 0..<10 {
+      current = try #require(current.arrayValue?.first)
+    }
+    #expect(current.unsignedValue == 0)
+  }
+
+  @Test("Rejects trailing bytes after a complete item")
+  func trailingBytes() {
+    #expect(throws: CBOR.DecodingError.trailingBytes) {
+      try CBOR.decode(Data([0x00, 0x00]))
+    }
+  }
 }
 
 @Suite("Token service")
@@ -236,5 +284,16 @@ struct ChallengeStoreTests {
   func unknown() async {
     let store = ChallengeStore()
     #expect(await store.consume(Data([1, 2, 3])) == false)
+  }
+
+  @Test("The store is bounded: issuing beyond capacity evicts instead of growing")
+  func bounded() async {
+    let store = ChallengeStore(maxEntries: 3)
+    for _ in 0..<3 {
+      _ = await store.issue()
+    }
+    let latest = await store.issue()
+    #expect(await store.count == 3)
+    #expect(await store.consume(latest))
   }
 }
